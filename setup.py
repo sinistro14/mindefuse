@@ -16,8 +16,6 @@ setup(
 
         'Intended Audience :: Education',
                              
-        'Topic :: Software Development :: TODO',
-
         'License :: OSI Approved :: MIT License',
 
         'Programming Language :: Python :: 3.7',
@@ -25,6 +23,8 @@ setup(
         'Operating System :: POSIX :: Linux',
 
         'Natural Language :: English',
+
+        'Topic :: Games/Entertainment :: Simulation',
 
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
 
@@ -51,7 +51,7 @@ setup(
     # `pip` to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'mindefuse=mindefuse:main',
+            'mindefuse = mindefuse.__main__:main',
         ],
     },
 

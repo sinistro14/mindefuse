@@ -1,8 +1,12 @@
 #!/usr/bin/env python3.7
 
+from .cmd import Command
+from .mindefuse import Mindefuse
+
 
 def main():
-    # TODO add mindefuse call here
+    application = Mindefuse()
+    Command(application)
     exit(0)
 
 
