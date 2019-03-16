@@ -12,6 +12,10 @@ class Command(Cmd):
 
         self.__application = application
 
+        self.aliases = {
+            "q":    self.do_exit,
+        }
+
         self._shell_name = "mindefuse"
         self.intro = "Welcome to {}".format(self.shell_name())
         self.prompt = "({}) > ".format(self.shell_name())
@@ -25,19 +29,13 @@ class Command(Cmd):
 
     def default(self, line):
         """Overrides unknown command message"""
-        self.stdout.write("Unknown command: '{}'\n".format(line))
+        cmd, arg, line = self.parseline(line)
+        if cmd in self.aliases:
+            self.aliases[cmd](arg)
+        else:
+            self.stdout.write("Unknown command: '{}'\n".format(line))
 
     def do_exit(self, args):
         """Exists the application"""
-        print("Exiting {}.".format(self.shell_name()))
+        print("Exiting {}...".format(self.shell_name()))
         raise SystemExit
-
-    def do_start(self, args):
-        """Starts the application"""
-        print("{} was started".format(self.shell_name()))
-        self.__application.start()
-
-    def do_stop(self, args):
-        """Stops the application"""
-        self.__application.stop()
-        print("{} was stopped".format(self.shell_name()))
