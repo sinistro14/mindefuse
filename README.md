@@ -23,8 +23,8 @@ TODO
 ## Commands
 
 TODO
-help - list the available commands
-exit - exit the application
+* help - list the available commands
+* exit - exit the application
 
 ## Example run
 
