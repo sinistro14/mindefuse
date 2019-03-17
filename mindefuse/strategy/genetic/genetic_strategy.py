@@ -5,6 +5,9 @@ from ..strategy_types import StrategyTypes
 
 
 class GeneticStrategy(Strategy):
+    """
+    Genetic strategy
+    """
 
     _type = StrategyTypes.GENETIC
 

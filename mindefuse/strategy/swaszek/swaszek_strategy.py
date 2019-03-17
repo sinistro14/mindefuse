@@ -5,6 +5,9 @@ from ..strategy_types import StrategyTypes
 
 
 class SwaszekStrategy(Strategy):
+    """
+    Swaszek strategy
+    """
 
     _type = StrategyTypes.SWASZEK
 

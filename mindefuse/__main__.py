@@ -1,12 +1,12 @@
 #!/usr/bin/env python3.7
 
-from .cmd import Command
+from .cmd import MainCommand
 from .mindefuse import Mindefuse
 
 
 def main():
     application = Mindefuse()
-    Command(application)
+    MainCommand(application).run()
     exit(0)
 
 

@@ -11,6 +11,7 @@ class Strategy(ABC):
     @property
     @abstractmethod
     def _type(self):
+        """Strategy type identifier"""
         pass
 
     def __init__(self):

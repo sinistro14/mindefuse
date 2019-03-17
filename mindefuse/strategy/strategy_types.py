@@ -1,14 +1,11 @@
 #!/usr/bin/env python3.7
 
-from enum import Enum, unique, auto
 
-
-@unique
-class StrategyTypes(Enum):
+class StrategyTypes:
     """
     Types of strategy available to solve a problem
     """
-    NULL = auto()
-    KNUTH = auto()
-    GENETIC = auto()
-    SWASZEK = auto()
+    NULL = "null"
+    KNUTH = "knuth"
+    GENETIC = "genetic"
+    SWASZEK = "swaszek"

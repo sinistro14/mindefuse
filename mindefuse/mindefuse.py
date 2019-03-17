@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.7
 
 from typing import Dict
+from .problem import ProblemBuilder, Problem
 from .strategy import Strategy, StrategyTypes
 from .strategy import NullStrategy, KnuthStrategy, GeneticStrategy, SwaszekStrategy
 
@@ -15,6 +16,7 @@ class Mindefuse:
     guessed elements and the number of misplaced guesses.
     """
 
+    """TODO"""
     __strategies = Dict[StrategyTypes, Strategy]
 
     def __init__(self):
@@ -45,3 +47,11 @@ class Mindefuse:
         :return: requested strategy type, or NullStrategy otherwise
         """
         return self.__strategies.get(strategy_type, self.__default_strategy)
+
+    def solve_problem(self, rounds, algorithm=None, secret_type=None, secret_size=None, secret=None) -> Problem:
+        return ProblemBuilder()\
+            .set_rounds(rounds)\
+            .set_type(secret_type)\
+            .set_secret_size(secret_size)\
+            .set_secret(secret)\
+            .build()
