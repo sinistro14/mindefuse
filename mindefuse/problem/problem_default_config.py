@@ -11,7 +11,7 @@ class ProblemDefaultConfig:
     """
 
     ROUNDS = 12                         # TODO review value
-    DEFAULT_TYPE = SecretTypes.COLOR    # TODO review value
+    DEFAULT_TYPE = SecretTypes.NUMERIC  # TODO review value
     DEFAULT_SIZE = 4                    # TODO review value
     DEFAULT_COLOURS = 6                 # TODO review value
     DEFAULT_SECRET = ""                 # TODO review value

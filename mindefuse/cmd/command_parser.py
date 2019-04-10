@@ -43,7 +43,7 @@ class CommandParser:
             self.__set_opt(Config.TYPE),
             action="store",
             default=None,
-            choices=[SecretTypes.COLOR, SecretTypes.NUMERIC, SecretTypes.LSTRING, SecretTypes.STRING]
+            choices=[SecretTypes.NUMERIC, SecretTypes.LSTRING, SecretTypes.STRING]
         )
 
         # size of secret

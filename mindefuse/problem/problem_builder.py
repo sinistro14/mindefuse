@@ -10,6 +10,13 @@ class ProblemBuilder:
     Problem builder
     """
 
+    """secret types that the builder is able to generate"""
+    __available_types = (
+        SecretTypes.NUMERIC,
+        SecretTypes.LSTRING,
+        SecretTypes.STRING,
+    )
+
     """number of query rounds of the problem"""
     __rounds = int
 
@@ -37,13 +44,7 @@ class ProblemBuilder:
         :param secret_type: secret type to set
         :return: builder
         """
-
-        if secret_type in (
-            SecretTypes.COLOR,
-            SecretTypes.NUMERIC,
-            SecretTypes.LSTRING,
-            SecretTypes.STRING,
-        ):
+        if secret_type in self.__available_types:
             self.__secret_type = secret_type
 
         return self
@@ -72,7 +73,9 @@ class ProblemBuilder:
         :param secret: secret to set
         :return: builder
         """
-        self.__secret = secret
+        if secret:
+            self.set_secret_size(len(secret))
+            self.__secret = secret
         return self
 
     def build(self) -> Problem:

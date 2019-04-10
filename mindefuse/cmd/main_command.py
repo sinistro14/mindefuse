@@ -41,7 +41,7 @@ class MainCommand(CommandBase):
             rounds=args.rounds,         # number of problem rounds
             secret_size=args.size,      # size of the secret sequence
             secret_type=args.type,      # type of secret, e.g. numeric, string...
-            secret=args.secret          # secret directly provided by the user TODO review if needed
+            secret=args.secret          # secret directly provided by the user
         )
         print(problem.check_secret())  # TODO remove later
 

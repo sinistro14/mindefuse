@@ -3,7 +3,7 @@
 from typing import Dict
 from .secret import Secret
 from .secret_types import SecretTypes
-from .generators import SecretGenerator, ColorGenerator, NumericGenerator, LStringGenerator, StringGenerator
+from .generators import SecretGenerator, NumericGenerator, LStringGenerator, StringGenerator
 
 
 class _SecretFactory:
@@ -23,9 +23,8 @@ class _SecretFactory:
 
         # available generators
         for generator in (
-                ColorGenerator(),
                 NumericGenerator(),
-                LStringGenerator(),
+                LStringGenerator(),  # maintain order to guarantee secret sequence type detection on user submission
                 StringGenerator(),
         ):
             generator.register(self)
@@ -38,13 +37,27 @@ class _SecretFactory:
         """
         self.__secret_generators[secret_type] = secret_generator
 
-    def generate_secret(self, secret_type: SecretTypes, size=None) -> Secret:
+    def __use_secret(self, secret) -> Secret:
+        """
+        Transforms a sequence to a secret
+        :param secret: sequence to transform
+        :return: secret
+        """
+        for generator in self.__secret_generators.values():
+            if generator.can_generate(secret):
+                return generator.generate(secret=secret)
+
+    def generate_secret(self, secret_type: SecretTypes, size=None, secret=None) -> Secret:
         """
         Provides the requested Secret
         :param secret_type: type of secret to generate
         :param size: size of the sequence to generate
+        :param secret: sequence defined by user to define as secret
         :return: the requested secret type, or a NUMERIC Secret, otherwise
         """
+        if secret:
+            return self.__use_secret(secret)
+
         generator = self.__secret_generators.get(secret_type)
 
         if generator:
