@@ -16,7 +16,7 @@ class Mindefuse:
     guessed elements and the number of misplaced guesses.
     """
 
-    """TODO"""
+    """Holds all the available strategies"""
     __strategies = Dict[StrategyTypes, Strategy]
 
     def __init__(self):

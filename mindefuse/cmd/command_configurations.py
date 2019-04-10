@@ -11,8 +11,7 @@ class CommandConfigurations:
 
     # Parser configuration
     NAME = "run_strategy"
-    DESCRIPTION = "Generates a problem, with the defined number of rounds and a secret of a given type and size" \
-                  "TODO adapt later"
+    DESCRIPTION = "Generates a problem, with the defined number of rounds and a secret of a given type and size"
 
     ALGORITHM = "algorithm"
     TYPE = "type"

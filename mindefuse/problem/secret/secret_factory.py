@@ -3,7 +3,7 @@
 from typing import Dict
 from .secret import Secret
 from .secret_types import SecretTypes
-from .generators import SecretGenerator, NumericGenerator, LStringGenerator, StringGenerator
+from .generators import SecretGenerator, ColorGenerator, NumericGenerator, LStringGenerator, StringGenerator
 
 
 class _SecretFactory:
@@ -23,6 +23,7 @@ class _SecretFactory:
 
         # available generators
         for generator in (
+                ColorGenerator(),
                 NumericGenerator(),
                 LStringGenerator(),
                 StringGenerator(),

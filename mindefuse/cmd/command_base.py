@@ -40,7 +40,7 @@ class CommandBase(Cmd):
     def shell_name(self):
         """Returns prompt name"""
         if self._shell_name is None:
-            raise NotImplementedError("Attribute should be defined")
+            raise NotImplementedError("Attribute should be defined.")
         return self._shell_name
 
     def default(self, line):

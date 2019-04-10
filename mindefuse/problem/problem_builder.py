@@ -19,7 +19,7 @@ class ProblemBuilder:
     """secret sequence size"""
     __secret_size = int
 
-    """secret sequence provided the user"""
+    """secret sequence provided by the user"""
     __secret = str  # TODO review if it makes sense, later
 
     def __init__(self):
@@ -39,6 +39,7 @@ class ProblemBuilder:
         """
 
         if secret_type in (
+            SecretTypes.COLOR,
             SecretTypes.NUMERIC,
             SecretTypes.LSTRING,
             SecretTypes.STRING,
@@ -53,7 +54,6 @@ class ProblemBuilder:
         :param rounds: number of problem rounds to set
         :return: builder
         """
-
         self.__rounds = rounds
         return self
 
