@@ -34,7 +34,8 @@ class CommandParser:
             self.__set_opt(Config.ALGORITHM),
             action="store",
             default=None,
-            choices=[StrategyTypes.KNUTH, StrategyTypes.GENETIC, StrategyTypes.SWASZEK]
+            choices=[StrategyTypes.KNUTH, StrategyTypes.GENETIC, StrategyTypes.SWASZEK],
+            help="only useful when solving a problem"
         )
 
         # type of secret
@@ -59,6 +60,7 @@ class CommandParser:
         self.__parser.add_argument(
             self.__set_opt(Config.SECRET),
             action="store",
+            type=str,
             default=None
         )
 

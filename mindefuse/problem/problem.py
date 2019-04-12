@@ -1,5 +1,6 @@
 #!/usr/bin/env python3.7
 
+from typing import Union, Tuple
 from .secret import Secret
 from .secret import SecretTypes
 from .secret import SecretFactory
@@ -13,6 +14,8 @@ class Problem:
     """number of query rounds of the problem"""
     __rounds = int
 
+    elapsed_rounds = int
+
     """secret to be uncovered"""
     __secret = Secret
 
@@ -20,12 +23,13 @@ class Problem:
         """
         Creates a Mastermind style problem
         If provided, the secret overrides all other definitions, except the number of rounds
-        :param rounds: number of problem rounds
+        :param rounds: number of available rounds
         :param secret_type: secret type
         :param secret_size: secret sequence size
         :param secret: secret sequence provided by the user
         """
         self.__rounds = rounds
+        self.elapsed_rounds = rounds
         self.__secret = self.__generate_secret(secret_type=secret_type, secret_size=secret_size, secret=secret)
 
     @staticmethod
@@ -46,3 +50,16 @@ class Problem:
         :return: secret sequence
         """
         return self.__secret.sequence
+
+    def check_proposal(self, proposal) -> Union[Tuple[int, int], None]:
+        """
+        Verify how many whites and reds correspond to the proposed sequence
+        Represents a played turn, therefore, it elapses a round
+        :param proposal: Proposal submitted by the player
+        :return: tuple with number of whites and reds if the max number of rounds was not reached, None otherwise
+        """
+        if self.elapsed_rounds:
+            self.elapsed_rounds -= 1
+            answer = self.__secret.compare(proposal.sequence)
+            return answer
+        return None

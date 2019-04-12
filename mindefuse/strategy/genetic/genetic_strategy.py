@@ -11,4 +11,5 @@ class GeneticStrategy(Strategy):
 
     _type = StrategyTypes.GENETIC
 
-    # TODO complete
+    def solve(self, problem):
+        pass

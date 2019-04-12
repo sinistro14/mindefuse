@@ -24,4 +24,10 @@ class Strategy(ABC):
         """
         context.register(self._type, self)
 
-    # TODO add problem solver method
+    @abstractmethod
+    def solve(self, problem):
+        """
+        Solves a Mastermind problem using a specific algorithm
+        :param problem: problem to be solved
+        """
+        pass

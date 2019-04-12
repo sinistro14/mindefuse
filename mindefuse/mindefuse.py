@@ -48,10 +48,16 @@ class Mindefuse:
         """
         return self.__strategies.get(strategy_type, self.__default_strategy)
 
-    def solve_problem(self, rounds, algorithm=None, secret_type=None, secret_size=None, secret=None) -> Problem:
+    @staticmethod
+    def generate_problem(rounds, secret_type=None, secret_size=None, secret=None):
         return ProblemBuilder()\
             .set_rounds(rounds)\
             .set_type(secret_type)\
             .set_secret_size(secret_size)\
             .set_secret(secret)\
             .build()
+
+    def solve_problem(self, rounds, algorithm=None, secret_type=None, secret_size=None, secret=None) -> Problem:
+        problem = self.generate_problem(rounds=rounds, secret_type=secret_type, secret_size=secret_size, secret=secret)
+        strategy = self.get_strategy(algorithm)
+        return strategy.solve(problem)

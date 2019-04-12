@@ -11,4 +11,5 @@ class KnuthStrategy(Strategy):
 
     _type = StrategyTypes.KNUTH
 
-    # TODO complete
+    def solve(self, problem):
+        pass
