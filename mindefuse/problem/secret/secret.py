@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.7
 
 from typing import List, Tuple
+from collections import Counter
 
 
 class Secret:
@@ -34,34 +35,21 @@ class Secret:
         :param proposal: sequence proposed as the correct sequence
         :return: tuple with number of whites and number of reds
         """
-        assert len(sequence) == len(proposal)
+        assert isinstance(sequence, str) and isinstance(proposal, str) and len(sequence) == len(proposal)
 
-        blank = '@'
+        # convert string to list of chars
+        aux_secret = list(sequence)
+        aux_proposal = list(proposal)
 
-        whites = 0
-        reds = 0
-
-        aux_proposal = proposal.split()
-        aux_secret = sequence.split()
+        # count number of chars
+        secret_count = Counter(aux_secret)
+        proposal_count = Counter(aux_proposal)
 
         # count all reds
-        for i in range(0, len(aux_secret)):
+        reds = sum(secret_val == seq_val for secret_val, seq_val in zip(aux_secret, aux_proposal))
 
-            if aux_secret == aux_proposal[i]:
-                reds += 1
-                aux_proposal[i] = blank
-                aux_secret[i] = blank
-
-        for i in range(0, len(aux_secret)):
-
-            if aux_secret[i] != blank:
-
-                for e in range(len(aux_proposal)):
-
-                    if aux_proposal[e] == aux_secret[i]:
-                        whites += 1
-                        aux_proposal[e] = blank
-                        break
+        # count all whites
+        whites = sum(min(val, proposal_count.get(k, 0)) for k, val in secret_count.items()) - reds
 
         return whites, reds
 
