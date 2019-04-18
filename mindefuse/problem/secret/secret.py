@@ -26,13 +26,15 @@ class Secret:
         self.types = types
         self.sequence = sequence
 
-    def compare(self, proposal: str) -> Tuple[int, int]:
+    @staticmethod
+    def compare_sequences(sequence: str, proposal: str) -> Tuple[int, int]:
         """
-        Compare the proposed sequence with the secret sequence
-        :param proposal: sequence proposed as correct secret sequence
+        Compare the proposed sequence with the a sequence
+        :param sequence: correct sequence
+        :param proposal: sequence proposed as the correct sequence
         :return: tuple with number of whites and number of reds
         """
-        assert len(self.sequence) == len(proposal)
+        assert len(sequence) == len(proposal)
 
         blank = '@'
 
@@ -40,8 +42,9 @@ class Secret:
         reds = 0
 
         aux_proposal = proposal.split()
-        aux_secret = self.sequence.split()
+        aux_secret = sequence.split()
 
+        # count all reds
         for i in range(0, len(aux_secret)):
 
             if aux_secret == aux_proposal[i]:
@@ -61,3 +64,11 @@ class Secret:
                         break
 
         return whites, reds
+
+    def compare(self, proposal: str) -> Tuple[int, int]:
+        """
+        Compare the proposed sequence with the secret sequence
+        :param proposal: sequence proposed as the correct secret sequence
+        :return: tuple with number of whites and number of reds
+        """
+        return self.compare_sequences(self.sequence, proposal)

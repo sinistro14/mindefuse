@@ -4,6 +4,7 @@ from typing import Union, Tuple
 from .secret import Secret
 from .secret import SecretTypes
 from .secret import SecretFactory
+from .proposal import Proposal
 
 
 class Problem:
@@ -51,7 +52,7 @@ class Problem:
         """
         return self.__secret.sequence
 
-    def check_proposal(self, proposal) -> Union[Tuple[int, int], None]:
+    def check_proposal(self, proposal: Proposal) -> Union[Proposal, None]:
         """
         Verify how many whites and reds correspond to the proposed sequence
         Represents a played turn, therefore, it elapses a round
@@ -60,6 +61,29 @@ class Problem:
         """
         if self.elapsed_rounds:
             self.elapsed_rounds -= 1
-            answer = self.__secret.compare(proposal.sequence)
-            return answer
+            proposal.whites, proposal.reds = self.__secret.compare(proposal.sequence)
+            return proposal
         return None
+
+    def secret_size(self):
+        """
+        Provides the size of the secret sequence
+        :return: size of the secret sequence
+        """
+        return self.__secret.elements
+
+    def possible_elements(self):
+        """
+        Provides a list with the possible colours of the sequence
+        :return: list of strings
+        """
+        return self.__secret.possible_elements
+
+    def compare_sequences(self, sequence1, sequence2):
+        """
+        Compares two sequences, assuming the first one to be the correct
+        :param sequence1: first sequence
+        :param sequence2: second sequence
+        :return: a tuple with number of whites and reds
+        """
+        return self.__secret.compare_sequences(sequence1, sequence2)

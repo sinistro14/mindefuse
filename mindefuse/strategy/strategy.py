@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.7
 
 from abc import ABC, abstractmethod
+from mindefuse.problem import Problem, Proposal
 
 
 class Strategy(ABC):
@@ -25,9 +26,18 @@ class Strategy(ABC):
         context.register(self._type, self)
 
     @abstractmethod
-    def solve(self, problem):
+    def solve(self, problem: Problem):
         """
         Solves a Mastermind problem using a specific algorithm
         :param problem: problem to be solved
         """
         pass
+
+    @staticmethod
+    def create_proposal(sequence) -> Proposal:
+        """
+        Creates a proposal with the guess sequence
+        :param sequence: string of the proposed sequence
+        :return: proposal
+        """
+        return Proposal(sequence)
