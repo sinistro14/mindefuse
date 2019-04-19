@@ -1,10 +1,12 @@
 #!/usr/bin/env python3.7
 
-from typing import Union, Tuple
+from typing import Union
+
 from .secret import Secret
 from .secret import SecretTypes
 from .secret import SecretFactory
 from .proposal import Proposal
+from .history import History
 
 
 class Problem:
@@ -20,6 +22,9 @@ class Problem:
     """secret to be uncovered"""
     __secret = Secret
 
+    """history of guesses and answers of the game"""
+    history = History
+
     def __init__(self, rounds: int, secret_type: SecretTypes, secret_size: int, secret=None):
         """
         Creates a Mastermind style problem
@@ -30,8 +35,9 @@ class Problem:
         :param secret: secret sequence provided by the user
         """
         self.__rounds = rounds
-        self.elapsed_rounds = rounds
         self.__secret = self.__generate_secret(secret_type=secret_type, secret_size=secret_size, secret=secret)
+        self.elapsed_rounds = rounds
+        self.history = History()
 
     @staticmethod
     def __generate_secret(secret_type: SecretTypes, secret_size: int, secret=None):
@@ -52,6 +58,13 @@ class Problem:
         """
         return self.__secret.sequence
 
+    def current_round(self) -> int:
+        """
+        Provides the current round value
+        :return: current round
+        """
+        return self.__rounds - self.elapsed_rounds
+
     def check_proposal(self, proposal: Proposal) -> Union[Proposal, None]:
         """
         Verify how many whites and reds correspond to the proposed sequence
@@ -61,8 +74,12 @@ class Problem:
         """
         if self.elapsed_rounds:
             self.elapsed_rounds -= 1
-            proposal.whites, proposal.reds = self.__secret.compare(proposal.sequence)
+            answer = proposal.reds = self.__secret.compare(proposal.sequence)
+            proposal.whites, proposal.reds = answer
+            self.history.add_entry(self.current_round(), self.__secret, proposal.sequence, answer)
             return proposal
+        else:  # TODO delete later, for test purposes only
+            print("Maximum number of rounds played")
         return None
 
     def secret_size(self):
@@ -87,3 +104,9 @@ class Problem:
         :return: a tuple with number of whites and reds
         """
         return self.__secret.compare_sequences(sequence1, sequence2)
+
+    def print_history(self):
+        """
+        Prints the history of the game
+        """
+        print(self.history)

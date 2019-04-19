@@ -11,4 +11,4 @@ class NumericGenerator(SecretGenerator):
 
     _type = SecretTypes.NUMERIC
 
-    _possible_elements = list(range(0, 10))
+    _possible_elements = [str(n) for n in range(0, 10)]

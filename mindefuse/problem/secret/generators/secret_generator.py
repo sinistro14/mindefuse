@@ -39,7 +39,7 @@ class SecretGenerator(ABC):
         :param secret: secret to verify
         :return: True if it can generated it, False otherwise
         """
-        for e in secret:
+        for e in list(secret):
             if e not in self._possible_elements:
                 return False
         return True
