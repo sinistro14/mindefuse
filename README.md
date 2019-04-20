@@ -1,9 +1,10 @@
 # mindefuse
 [![Build Status](https://travis-ci.com/sinistro14/mindefuse.svg?token=NY5sBpywnxqMdVGh3wnz&branch=master)](https://travis-ci.com/sinistro14/mindefuse)
+
 Hostage situation negotiator simulation
 
 ## Prerequisites
-Python version 3.7 is assumed to be installed, as well as pip package manager utility and setuptools module
+Python version 3.7 is assumed to be installed, as well as pip package manager utility and setuptools module.
 
 ## Installation
 
@@ -43,9 +44,9 @@ TODO
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Disclaimer
 
-Note that this software was develop as an academic project, therefore,
+This software was develop as an academic project, therefore,
 no enterprise level reliability assurances can be provided.
