@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.7
 
-from typing import Union
+from typing import Union, List
+from timeit import default_timer as time
 
 from .secret import Secret
 from .secret import SecretTypes
@@ -25,6 +26,9 @@ class Problem:
 
     """number of rounds elapsed, also corresponds to the number of guesses"""
     elapsed_rounds = int
+
+    """time at which the first guess was submitted"""
+    __start_time = float
 
     """secret to be uncovered"""
     __secret = Secret
@@ -51,6 +55,7 @@ class Problem:
         self.elapsed_rounds = rounds
         self.history = History()
         self.complexity = self.__estimate_complexity()
+        self.__start_time = None
 
     @staticmethod
     def __generate_secret(secret_type: SecretTypes, secret_size: int, secret=None):
@@ -71,12 +76,14 @@ class Problem:
         """
         return pow(self.__secret.elements, self.secret_size())
 
-    def check_secret(self):  # TODO test only, delete later
+    def __time_passed(self):
         """
-        Provides the generated secret sequence
-        :return: secret sequence
+        Provides the time passed since the first time it was requested
+        :return: microseconds passed
         """
-        return self.__secret.sequence
+        now = time()
+        self.__start_time = self.__start_time or now
+        return now - self.__start_time
 
     def current_round(self) -> int:
         """
@@ -90,7 +97,7 @@ class Problem:
         Verify how many whites and reds correspond to the proposed sequence
         Represents a played turn, therefore, it elapses a round
         :param proposal: Proposal submitted by the player
-        :return: tuple with number of whites and reds if the max number of rounds was not reached, None otherwise
+        :return: tuple with number of whites and reds if the game is not over, None otherwise
         """
         if not self.__finished:
             self.elapsed_rounds -= 1
@@ -98,25 +105,32 @@ class Problem:
             answer = proposal.reds = self.__secret.compare(proposal.sequence)
             proposal.whites, proposal.reds = answer
 
-            if proposal.reds == self.__secret.elements:
+            if proposal.reds == self.__secret.elements:     # the correct secret was proposed
                 self.__solved = True
                 self.__finished = True
 
-            if not self.elapsed_rounds:
+            if not self.elapsed_rounds:                     # the maximum number of rounds has passed
                 self.__finished = True
 
-            self.history.add_entry(self.current_round(), self.__secret.sequence, proposal.sequence, answer)
+            self.history.add_entry(                         # update history
+                self.current_round(),
+                self.__secret.sequence,
+                proposal.sequence,
+                answer,
+                self.__time_passed()
+            )
+
             return proposal
         return None
 
-    def secret_size(self):
+    def secret_size(self) -> int:
         """
         Provides the size of the secret sequence
         :return: size of the secret sequence
         """
         return self.__secret.elements
 
-    def possible_elements(self):
+    def possible_elements(self) -> List[str]:
         """
         Provides a list with the possible colours of the sequence
         :return: list of strings
@@ -146,6 +160,13 @@ class Problem:
         :return: True if the problem is finished, False otherwise
         """
         return self.__finished
+
+    def print_secret(self):
+        """
+        Prints the generated secret sequence
+        :return: secret sequence
+        """
+        print(self.__secret.sequence)
 
     def print_history(self):
         """

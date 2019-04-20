@@ -8,7 +8,7 @@ branches:
   only:
     - master
 
-# Existing Python versions
+# existing Python versions
 python:
   - 3.6
   - 3.7
@@ -17,6 +17,6 @@ python:
 install:
   - python -m pip install -r requirements.txt
 
-# command to run tests
+# command to run tests, run all tests only in nightly build
 script:
-- python3 -m pytest
+  -if [ "$TRAVIS_EVENT_TYPE" = "cron" ] ; then python3 -m pytest ; else python3 -m pytest -m lite; fi

@@ -45,7 +45,7 @@ class MainCommand(CommandBase):
                 secret_type=args.type,      # type of secret, e.g. numeric, string...
                 secret=args.secret          # secret directly provided by the user
             )
-            print(problem.check_secret())
+            problem.print_secret()
 
     def do_run_strategy(self, args):
         """

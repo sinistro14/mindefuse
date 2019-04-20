@@ -97,25 +97,16 @@ class KnuthStrategy(Strategy):
         secret_size = problem.secret_size()
         possible_elements = problem.possible_elements()
 
-        initial_guess = self._initial_guess(problem)
+        current_guess = self._initial_guess(problem)
 
-        current_guess = initial_guess
+        proposal = self.create_proposal(current_guess)
 
-        all_combinations = self._generate_combinations(possible_elements, secret_size)
+        answer = problem.check_proposal(proposal)
+
         solutions = self._generate_combinations(possible_elements, secret_size)
-        turn = 0
+        all_combinations = self._generate_combinations(possible_elements, secret_size)
 
-        # TODO create correct loop here
         while not problem.finished():
-
-            turn += 1
-
-            proposal = self.create_proposal(current_guess)
-
-            answer = problem.check_proposal(proposal)
-
-            if problem.finished():
-                break
 
             # remove guess from pools
             solutions = self._remove_guess(solutions, current_guess)
@@ -131,6 +122,10 @@ class KnuthStrategy(Strategy):
             solutions, solutions_aux = tee(solutions)
             all_combinations, all_combinations_aux = tee(all_combinations)
             current_guess = self._get_next_guess(next_guesses, all_combinations_aux, solutions_aux)
+
+            proposal = self.create_proposal(current_guess)
+
+            answer = problem.check_proposal(proposal)
 
         problem.print_history()
         return problem

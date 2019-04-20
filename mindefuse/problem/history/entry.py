@@ -17,12 +17,16 @@ class Entry:
     """corresponding values of whites and reds"""
     answer = Tuple[int, int]
 
-    def __init__(self, round_val: int, secret: str, guess: str, answer: Tuple[int, int]):
+    """time passed since the problem started to be solved"""
+    time = float
+
+    def __init__(self, round_val: int, secret: str, guess: str, answer: Tuple[int, int], time: float):
         self.round = round_val
         self.secret = secret
         self.guess = guess
         self.answer = answer
+        self.time = time
 
     def __str__(self):
-        return "Round: {} | Secret: {} | Guess: {} | Result: ({}, {})"\
-            .format(self.round, self.secret, self.guess, self.answer[0], self.answer[1])
+        return "Round: {} | Secret: {} | Guess: {} | Result: ({}, {}) | Time: {:.4f} ms"\
+            .format(self.round, self.secret, self.guess, self.answer[0], self.answer[1], self.time)
