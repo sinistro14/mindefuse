@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.7
 
 from typing import List
+
 from .entry import Entry
 
 
@@ -25,7 +26,6 @@ class History:
         )
 
     def __str__(self):
-        final = "History\n"
-        for entry in self.entries:
-            final += str(entry)
+        final = (25 * "-") + "History" + (25 * '-') + "\n"
+        final += "\n".join(str(entry) for entry in self.entries)
         return final

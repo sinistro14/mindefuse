@@ -1,10 +1,11 @@
 #!/usr/bin/env python3.7
 
-from itertools import product
+from multiprocessing import Pool, Manager, cpu_count
+from itertools import product, tee
 from collections import defaultdict
-from itertools import tee
-from multiprocessing import Pool
+from functools import partial
 
+from .knuth_config import KnuthConfig as Config
 from ..strategy import Strategy
 from ..strategy_types import StrategyTypes
 
@@ -37,13 +38,16 @@ class KnuthStrategy(Strategy):
         return map(''.join, product(possible_elements, repeat=secret_size))
 
     def _get_next_guess(self, guesses, all_combinations, solutions):
-        all_combinations = list(all_combinations)
-        solutions = list(solutions)
+
+        solutions = set(solutions)
+
         guesses1, guesses2 = tee(guesses)
 
         for guess in guesses1:
             if guess in solutions:
                 return guess
+
+        all_combinations = set((comb for comb in all_combinations if comb not in solutions))
 
         for guess in guesses2:
             if guess in all_combinations:
@@ -55,30 +59,37 @@ class KnuthStrategy(Strategy):
     def prune_guesses(self, problem, guesses, current_guess, answer):
         return (guess for guess in guesses if problem.compare_sequences(guess, current_guess) == answer)
 
+    def _count_score(self, combination, problem, solutions, best_score):
+
+        score_count = defaultdict(int)
+
+        for opt in solutions:
+            score = sum(problem.compare_sequences(combination, opt))  # sum the two elements of the array
+            score_count[score] += 1
+
+        best_score[combination] = score_count[max(score_count, key=score_count.get)]
+
     def _mini_max(self, problem, all_combinations, solutions):
 
-        best_score = {}
+        manager = Manager()
 
-        all_combinations, aux_solutions = tee(all_combinations)
-        solutions, solutions_final = tee(solutions)
+        best_score = manager.dict()
 
-        for el in all_combinations:
+        pool = Pool(Config.POOL_SIZE)
 
-            score_count = defaultdict(int)
-            solutions, solutions_aux = tee(solutions)
+        pool.map(  # blocking call
+            partial(self._count_score, problem=problem, solutions=list(solutions), best_score=best_score),
+            iterable=list(all_combinations),
+            chunksize=problem.complexity // Config.POOL_SIZE
+        )
 
-            for opt in solutions_aux:
-                score = problem.compare_sequences(el, opt)
-                score = score[0] + score[1]
-                score_count[score] += 1
-
-            max_score = max(score_count, key=score_count.get)
-            max_score = score_count[max_score]
-            best_score[el] = max_score
+        pool.close()
 
         min_score = best_score[min(best_score, key=best_score.get)]
 
         next_guesses = (k for k, v in sorted(best_score.items()) if v == min_score)
+
+        manager.shutdown()
 
         return next_guesses
 
@@ -95,35 +106,31 @@ class KnuthStrategy(Strategy):
         turn = 0
 
         # TODO create correct loop here
-        while True:
+        while not problem.finished():
 
             turn += 1
-
-            all_combinations = self._remove_guess(all_combinations, current_guess)
-            solutions = self._remove_guess(solutions, current_guess)
 
             proposal = self.create_proposal(current_guess)
 
             answer = problem.check_proposal(proposal)
-            if answer.reds == secret_size:
-                print("The game is won!")
-                print("Sequence: " + str(current_guess))
-                break
-            else:
-                print("Round " + str(turn))
-                print("Sequence: " + str(current_guess))
-                print("Points: ({}, {})".format(answer.whites, answer.reds))
 
-            # Remove from solutions any code that would not give the same response if it was the code
+            if problem.finished():
+                break
+
+            # remove guess from pools
+            solutions = self._remove_guess(solutions, current_guess)
+            all_combinations = self._remove_guess(all_combinations, current_guess)
+
+            # remove from solutions any code that would not give the same response if it was the secret sequence
             solutions = self.prune_guesses(problem, solutions, current_guess, (answer.whites, answer.reds))
 
-            all_combinations, all_combinations_aux = tee(all_combinations)
             solutions, solutions_aux = tee(solutions)
-
+            all_combinations, all_combinations_aux = tee(all_combinations)
             next_guesses = self._mini_max(problem, all_combinations_aux, solutions_aux)
 
-            all_combinations, all_combinations_aux = tee(all_combinations)
             solutions, solutions_aux = tee(solutions)
+            all_combinations, all_combinations_aux = tee(all_combinations)
             current_guess = self._get_next_guess(next_guesses, all_combinations_aux, solutions_aux)
 
+        problem.print_history()
         return problem

@@ -6,15 +6,11 @@ from mindefuse.strategy import StrategyTypes
 
 class TestKnuth:
 
-    @pytest.mark.skip(reason="still not outputting a testable value")
-    @pytest.mark.parametrize("rounds, secret, expected", [
+    @pytest.mark.parametrize("rounds, secret, solved", [
         (
-            12, "456",
-            (
-                "456",
-            )
+            12, "456", True
         ),
     ])
-    def test_knuth(self, helper, mindefuse, rounds, secret, expected):
+    def test_knuth(self, helper, mindefuse, rounds, secret, solved):
         problem = mindefuse.solve_problem(rounds=rounds, algorithm=StrategyTypes.KNUTH, secret=secret)
-        helper.assert_knuth(problem.history, expected)
+        helper.assert_solved(problem, solved)

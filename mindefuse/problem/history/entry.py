@@ -24,5 +24,5 @@ class Entry:
         self.answer = answer
 
     def __str__(self):
-        return "Round: {} | Secret: {} | Guess: {} | ({}, {})"\
+        return "Round: {} | Secret: {} | Guess: {} | Result: ({}, {})"\
             .format(self.round, self.secret, self.guess, self.answer[0], self.answer[1])

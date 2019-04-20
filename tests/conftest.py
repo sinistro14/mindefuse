@@ -2,7 +2,7 @@
 
 import pytest
 from mindefuse import Mindefuse
-from mindefuse.problem.history import History
+from mindefuse.problem import Problem
 
 
 class Helper:
@@ -11,10 +11,8 @@ class Helper:
     """
 
     @staticmethod
-    def assert_knuth(history: History, expected):
-
-        for entry, answer in zip(history.entries, expected):
-            assert entry.guess == answer
+    def assert_solved(problem: Problem, solved: bool):
+        assert problem.solved() == solved
 
 
 @pytest.fixture(scope="class")

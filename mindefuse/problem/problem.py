@@ -14,13 +14,23 @@ class Problem:
     Representation of a Mastermind style problem
     """
 
+    """whether the problem is solved"""
+    __solved = bool
+
+    """whether the problem is finished"""
+    __finished = bool
+
     """number of query rounds of the problem"""
     __rounds = int
 
+    """number of rounds elapsed, also corresponds to the number of guesses"""
     elapsed_rounds = int
 
     """secret to be uncovered"""
     __secret = Secret
+
+    """metric to establish the complexity of the problem, the size of the solution space"""
+    complexity = int
 
     """history of guesses and answers of the game"""
     history = History
@@ -34,10 +44,13 @@ class Problem:
         :param secret_size: secret sequence size
         :param secret: secret sequence provided by the user
         """
+        self.__solved = False
+        self.__finished = False
         self.__rounds = rounds
         self.__secret = self.__generate_secret(secret_type=secret_type, secret_size=secret_size, secret=secret)
         self.elapsed_rounds = rounds
         self.history = History()
+        self.complexity = self.__estimate_complexity()
 
     @staticmethod
     def __generate_secret(secret_type: SecretTypes, secret_size: int, secret=None):
@@ -50,6 +63,13 @@ class Problem:
         :return: generated secret sequence
         """
         return SecretFactory.generate_secret(secret_type=secret_type, size=secret_size, secret=secret)
+
+    def __estimate_complexity(self):
+        """
+        Estimates the complexity of the problem
+        :return: complexity metric
+        """
+        return pow(self.__secret.elements, self.secret_size())
 
     def check_secret(self):  # TODO test only, delete later
         """
@@ -72,14 +92,21 @@ class Problem:
         :param proposal: Proposal submitted by the player
         :return: tuple with number of whites and reds if the max number of rounds was not reached, None otherwise
         """
-        if self.elapsed_rounds:
+        if not self.__finished:
             self.elapsed_rounds -= 1
+
             answer = proposal.reds = self.__secret.compare(proposal.sequence)
             proposal.whites, proposal.reds = answer
-            self.history.add_entry(self.current_round(), self.__secret, proposal.sequence, answer)
+
+            if proposal.reds == self.__secret.elements:
+                self.__solved = True
+                self.__finished = True
+
+            if not self.elapsed_rounds:
+                self.__finished = True
+
+            self.history.add_entry(self.current_round(), self.__secret.sequence, proposal.sequence, answer)
             return proposal
-        else:  # TODO delete later, for test purposes only
-            print("Maximum number of rounds played")
         return None
 
     def secret_size(self):
@@ -105,8 +132,28 @@ class Problem:
         """
         return self.__secret.compare_sequences(sequence1, sequence2)
 
+    def solved(self):
+        """
+        States whether the problem was solved
+        :return: True if the problem was solved, False otherwise
+        """
+        return self.__solved
+
+    def finished(self):
+        """
+        State whether the problem is finished
+        The problem may be finished if the maximum number of rounds passed or if was solved
+        :return: True if the problem is finished, False otherwise
+        """
+        return self.__finished
+
     def print_history(self):
         """
-        Prints the history of the game
+        Prints the history of the problem
         """
-        print(self.history)
+        history = str(self.history) + '\n'
+        if self.__solved:
+            history += "The game was won!!!"
+        else:
+            history += "The game was lost."
+        print(history)
