@@ -55,7 +55,8 @@ class ProblemBuilder:
         :param rounds: number of problem rounds to set
         :return: builder
         """
-        self.__rounds = rounds
+        if rounds:
+            self.__rounds = rounds
         return self
 
     def set_secret_size(self, size):
@@ -64,7 +65,8 @@ class ProblemBuilder:
         :param size: size of the secret sequence to set
         :return: builder
         """
-        self.__secret_size = size
+        if size:
+            self.__secret_size = size
         return self
 
     def set_secret(self, secret):

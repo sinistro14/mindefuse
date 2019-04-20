@@ -4,14 +4,11 @@ import pytest
 from mindefuse.strategy import StrategyTypes
 
 
-@pytest.mark.lite
+@pytest.mark.custom
 class TestKnuthNumeric:
 
     @pytest.mark.parametrize("rounds, secret, solved", [
-        (12, "456", True),
-        (12, "555", True),
-        (12, "989", True),
-        (12, "999", True),
+        (5, "456", True),
     ])
     def test_numeric_knuth(self, helper, mindefuse, rounds, secret, solved):
         problem = mindefuse.solve_problem(rounds=rounds, algorithm=StrategyTypes.KNUTH, secret=secret)
