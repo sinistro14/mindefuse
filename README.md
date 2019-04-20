@@ -1,4 +1,5 @@
 # mindefuse
+[![Build Status](https://travis-ci.com/sinistro14/mindefuse.svg?token=NY5sBpywnxqMdVGh3wnz&branch=master)](https://travis-ci.com/sinistro14/mindefuse)
 Hostage situation negotiator simulation
 
 ## Prerequisites
