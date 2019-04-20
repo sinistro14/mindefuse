@@ -19,7 +19,7 @@ install:
 
 # command to run tests, run all tests only in nightly build
 script:
-  - if [ "$TRAVIS_EVENT_TYPE" = "cron" ];
-  then python3 -m pytest -m "not custom";
-  else python3 -m pytest -m lite;
+  - if [ "$TRAVIS_EVENT_TYPE" = "cron" ]
+  then python3 -m pytest -m "not custom"
+  else python3 -m pytest -m lite
   fi
