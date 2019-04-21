@@ -1,8 +1,8 @@
 #! usr/bin/env python3.7
 
+from ..mindefuse import Mindefuse
 from .command_base import CommandBase
 from .command_parser import CommandParser
-from ..mindefuse import Mindefuse
 from .command_configurations import CommandConfigurations as Config
 
 

@@ -37,6 +37,11 @@ class CommandBase(Cmd):
         print("Exiting the application...")
         raise SystemExit
 
+    def do_quit(self, args):
+        """Exists the application"""
+        print("Exiting the application...")
+        raise SystemExit
+
     def shell_name(self):
         """Returns prompt name"""
         if self._shell_name is None:

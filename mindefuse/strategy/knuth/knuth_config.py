@@ -2,4 +2,9 @@
 
 
 class KnuthConfig:
-    POOL_SIZE = 4
+    """
+    Configuration of Knuth Algorithm
+    """
+
+    """size of the process pool to use to run minimax"""
+    POOL_SIZE = 4  # always use a positive value

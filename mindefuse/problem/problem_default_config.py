@@ -9,9 +9,8 @@ class ProblemDefaultConfig:
     The values here defined match those of a classic Mastermind game,
     whilst considering numbers instead of colours
     """
-
-    ROUNDS = 12                         # TODO review value
-    DEFAULT_TYPE = SecretTypes.NUMERIC  # TODO review value
-    DEFAULT_SIZE = 4                    # TODO review value
-    DEFAULT_COLOURS = 6                 # TODO review value
-    DEFAULT_SECRET = ""                 # TODO review value
+    ROUNDS = 12
+    DEFAULT_TYPE = SecretTypes.NUMERIC
+    DEFAULT_SIZE = 4
+    DEFAULT_COLOURS = 6
+    DEFAULT_SECRET = ""

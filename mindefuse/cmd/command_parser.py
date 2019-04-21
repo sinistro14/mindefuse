@@ -1,9 +1,9 @@
 #! usr/bin/env python3.7
 
 import argparse
-from .command_configurations import CommandConfigurations as Config
 from ..problem import SecretTypes
 from ..strategy import StrategyTypes
+from .command_configurations import CommandConfigurations as Config
 
 
 class CommandParser:

@@ -50,6 +50,16 @@ class Mindefuse:
 
     @staticmethod
     def generate_problem(rounds, secret_type=None, secret_size=None, secret=None):
+        """
+        Generates a problem based on the provided specification.
+        If secret is defined no random sequence is generated, thus,
+        both secret_type and secret_size are overridden
+        :param rounds: number of rounds of the problem
+        :param secret_type: type of the secret
+        :param secret_size: size of the secret sequence
+        :param secret: final secret sequence
+        :return: built problem
+        """
         return ProblemBuilder()\
             .set_rounds(rounds)\
             .set_type(secret_type)\
@@ -58,6 +68,15 @@ class Mindefuse:
             .build()
 
     def solve_problem(self, rounds, algorithm=None, secret_type=None, secret_size=None, secret=None) -> Problem:
+        """
+        Tries to solve a problem, using the requested strategy, in the specified number of rounds
+        If no secret is defined, a new one is randomly generated with the provideded specs
+        :param rounds: number of rounds of the problem
+        :param algorithm: algorithm used to solve the problem
+        :param secret_type: type of secret to generate
+        :param secret_size: size of secret to generate
+        :param secret: secret proposed by the user
+        :return:
+        """
         problem = self.generate_problem(rounds=rounds, secret_type=secret_type, secret_size=secret_size, secret=secret)
-        strategy = self.get_strategy(algorithm)
-        return strategy.solve(problem)
+        return self.get_strategy(algorithm).solve(problem)
