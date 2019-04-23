@@ -79,4 +79,4 @@ class Mindefuse:
         :return:
         """
         problem = self.generate_problem(rounds=rounds, secret_type=secret_type, secret_size=secret_size, secret=secret)
-        return self.get_strategy(algorithm).solve(problem)
+        return self.get_strategy(algorithm).solve_problem(problem)

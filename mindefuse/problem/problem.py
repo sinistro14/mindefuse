@@ -137,14 +137,15 @@ class Problem:
         """
         return self.__secret.possible_elements
 
-    def compare_sequences(self, sequence1, sequence2):
+    @staticmethod
+    def compare_sequences(sequence1, sequence2):
         """
         Compares two sequences, assuming the first one to be the correct
         :param sequence1: first sequence
         :param sequence2: second sequence
         :return: a tuple with number of whites and reds
         """
-        return self.__secret.compare_sequences(sequence1, sequence2)
+        return Secret.compare_sequences(sequence1, sequence2)
 
     def solved(self):
         """

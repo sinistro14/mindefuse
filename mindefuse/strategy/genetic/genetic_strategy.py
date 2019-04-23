@@ -11,5 +11,5 @@ class GeneticStrategy(Strategy):
 
     _type = StrategyTypes.GENETIC
 
-    def solve(self, problem):
+    def solve_problem(self, problem):
         pass

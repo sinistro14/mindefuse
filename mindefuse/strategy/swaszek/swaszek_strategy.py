@@ -11,5 +11,5 @@ class SwaszekStrategy(Strategy):
 
     _type = StrategyTypes.SWASZEK
 
-    def solve(self, problem):
+    def solve_problem(self, problem):
         pass

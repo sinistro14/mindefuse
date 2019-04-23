@@ -26,7 +26,7 @@ class Strategy(ABC):
         context.register(self._type, self)
 
     @abstractmethod
-    def solve(self, problem: Problem):
+    def solve_problem(self, problem: Problem):
         """
         Solves a Mastermind problem using a specific algorithm
         :param problem: problem to be solved

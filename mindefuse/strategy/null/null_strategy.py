@@ -12,5 +12,5 @@ class NullStrategy(Strategy):
 
     _type = StrategyTypes.NULL
 
-    def solve(self, problem):
+    def solve_problem(self, problem):
         pass

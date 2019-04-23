@@ -3,9 +3,10 @@
 from functools import partial
 from itertools import product, tee
 from collections import defaultdict
-from multiprocessing import Pool, Manager
+from multiprocessing import Pool
 
 from ..strategy import Strategy
+from mindefuse.problem import Problem
 from ..strategy_types import StrategyTypes
 from .knuth_config import KnuthConfig as Config
 
@@ -44,18 +45,10 @@ class KnuthStrategy(Strategy):
         :param problem: problem to which the guess will be submitted
         :return: sequence to use as the first guess
         """
-        times = 1
-        final = ""
         secret_size = problem.secret_size()
+        possible_elements = problem.possible_elements()
 
-        for el in problem.possible_elements():
-            times += 1
-            final += times * el
-
-            if len(final) >= secret_size:
-                break
-
-        return final[:secret_size]
+        return "".join(time * el for time, el in zip(range(2, secret_size + 1), possible_elements))[:secret_size]
 
     def _generate_combinations(self, possible_elements, sequence_size):
         """
@@ -97,68 +90,64 @@ class KnuthStrategy(Strategy):
         """
         return (guess for guess in guesses if guess != guess_to_remove)
 
-    def _prune_guesses(self, problem, guesses, last_guess, answer):
+    def _prune_guesses(self, guesses, last_guess, answer):
         """
         Provides guesses after pruning all the sequences that would not provide the same response.
-        :param problem: problem to solve
         :param guesses: guesses to be pruned
         :param last_guess: last sequence proposed as a solution
         :param answer: response to last_guess
         :return: pruned guesses
         """
-        return (guess for guess in guesses if problem.compare_sequences(guess, last_guess) == answer)
+        return (guess for guess in guesses if Problem.compare_sequences(guess, last_guess) == answer)
 
-    def _count_score(self, combination, problem, solutions, scores):
+    @staticmethod
+    def _count_score(combination, solutions):
         """
+        Provides the
         Sets in scores the score of the provided combination.
         The score of a combination is the maximum size of the solution space, in the worst case,
         if the said combination was the secret sequence.
         :param combination: combination being tested
-        :param problem: problem being solved
         :param solutions: solution space
-        :param scores: dict where the score of each combination is saved
         """
         score_count = defaultdict(int)
 
         for solution in solutions:
-            score = sum(problem.compare_sequences(combination, solution))  # sum the two elements of the array
+            score = sum(Problem.compare_sequences(combination, solution))  # sum the two elements of the array
             score_count[score] += 1
 
-        scores[combination] = score_count[max(score_count, key=score_count.get)]
+        return combination, score_count[max(score_count, key=score_count.get)]
 
-    def _mini_max(self, problem, combinations, solutions):
+    def _mini_max(self, combinations, solutions):
         """
         Provide the list of minimum max scored sequences for the problem.
-        :param problem: problem to solve
         :param combinations: all available combinations
         :param solutions: solution space
         :return: the minimum max scored guesses
         """
-        manager = Manager()
-
-        scores = manager.dict()
 
         pool = Pool(Config.POOL_SIZE)
+        combinations_space = list(combinations)
 
-        pool.map(  # blocking call, best_score will be updated by each worker
-            partial(self._count_score, problem=problem, solutions=list(solutions), scores=scores),
-            iterable=list(combinations),
-            chunksize=problem.complexity // Config.POOL_SIZE
-        )
+        scores = {
+            combinations: score for combinations, score in pool.imap_unordered(
+                    partial(self._count_score, solutions=list(solutions)),
+                    iterable=combinations_space,
+                    chunksize=len(combinations_space) // Config.POOL_SIZE,
+            )
+        }
 
         pool.close()
 
         # minimum max score
-        min_score = scores[min(scores, key=scores.get)]
+        min_score = min(scores.values())
 
         # filter the sequences with the minimum max score
-        next_guesses = (k for k, v in sorted(scores.items()) if v == min_score)
-
-        manager.shutdown()
+        next_guesses = sorted((k for k, v in scores.items() if v == min_score))
 
         return next_guesses
 
-    def solve(self, problem):
+    def solve_problem(self, problem):
         """
         Solves a problem using Knuth algorithm
         :param problem: problem to solve
@@ -183,11 +172,11 @@ class KnuthStrategy(Strategy):
             all_combinations = self._remove_guess(all_combinations, current_guess)
 
             # remove from solutions any code that would not give the same response if it was the secret sequence
-            solutions = self._prune_guesses(problem, solutions, current_guess, (answer.whites, answer.reds))
+            solutions = self._prune_guesses(solutions, current_guess, (answer.whites, answer.reds))
 
             solutions, solutions_aux = tee(solutions)
             all_combinations, all_combinations_aux = tee(all_combinations)
-            next_guesses = self._mini_max(problem, all_combinations_aux, solutions_aux)
+            next_guesses = self._mini_max(all_combinations_aux, solutions_aux)
 
             solutions, solutions_aux = tee(solutions)
             all_combinations, all_combinations_aux = tee(all_combinations)
