@@ -37,19 +37,15 @@ class Secret:
         """
         assert isinstance(sequence, str) and isinstance(proposal, str) and len(sequence) == len(proposal)
 
-        # convert string to list of chars
-        aux_secret = list(sequence)
-        aux_proposal = list(proposal)
+        # count all reds
+        reds = sum(secret_val == seq_val for secret_val, seq_val in zip(sequence, proposal))
 
         # count number of chars
-        secret_count = Counter(aux_secret)
-        proposal_count = Counter(aux_proposal)
-
-        # count all reds
-        reds = sum(secret_val == seq_val for secret_val, seq_val in zip(aux_secret, aux_proposal))
+        secret_count = Counter(sequence)
+        proposal_count = Counter(proposal)
 
         # count all whites
-        whites = sum(min(val, proposal_count.get(k, 0)) for k, val in secret_count.items()) - reds
+        whites = sum(min(value, proposal_count.get(char, 0)) for char, value in secret_count.items()) - reds
 
         return whites, reds
 

@@ -36,7 +36,8 @@ class KnuthStrategy(Strategy):
     """strategy identification type"""
     _type = StrategyTypes.KNUTH
 
-    def _initial_guess(self, problem):
+    @staticmethod
+    def _initial_guess(problem):
         """
         Generates the first guess to use as input.
         Knuth's initial guess was '1122', which in our definition of 'numeric' would be '0011'.
@@ -50,7 +51,8 @@ class KnuthStrategy(Strategy):
 
         return "".join(time * el for time, el in zip(range(2, secret_size + 1), possible_elements))[:secret_size]
 
-    def _generate_combinations(self, possible_elements, sequence_size):
+    @staticmethod
+    def _generate_combinations(possible_elements, sequence_size):
         """
         Generates all possible combinations of elements with a given sequence size
         :param possible_elements: elements used to create the sequence
@@ -59,7 +61,8 @@ class KnuthStrategy(Strategy):
         """
         return map(''.join, product(possible_elements, repeat=sequence_size))
 
-    def _get_next_guess(self, guesses, all_combinations, solutions):
+    @staticmethod
+    def _get_next_guess(guesses, all_combinations, solutions):
         """
         Chooses the next guess from the set of minimum max scored guesses
         :param guesses: guesses to choose from
@@ -81,7 +84,8 @@ class KnuthStrategy(Strategy):
             if guess in all_combinations:
                 return guess
 
-    def _remove_guess(self, guesses, guess_to_remove):
+    @staticmethod
+    def _remove_guess(guesses, guess_to_remove):
         """
         Provide the list of guesses after removing another guess
         :param guesses: guesses
@@ -90,7 +94,8 @@ class KnuthStrategy(Strategy):
         """
         return (guess for guess in guesses if guess != guess_to_remove)
 
-    def _prune_guesses(self, guesses, last_guess, answer):
+    @staticmethod
+    def _prune_guesses(guesses, last_guess, answer):
         """
         Provides guesses after pruning all the sequences that would not provide the same response.
         :param guesses: guesses to be pruned
