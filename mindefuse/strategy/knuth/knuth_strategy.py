@@ -1,14 +1,11 @@
 #!/usr/bin/env python3.7
 
-from functools import partial
 from itertools import product, tee
-from collections import defaultdict
-from multiprocessing import Pool
 
 from ..strategy import Strategy
 from mindefuse.problem import Problem
+from .score_count import ParallelScore
 from ..strategy_types import StrategyTypes
-from .knuth_config import KnuthConfig as Config
 
 
 class KnuthStrategy(Strategy):
@@ -23,7 +20,7 @@ class KnuthStrategy(Strategy):
         if number of reds is equal to the size of the secret, if it is, the game is won.
     5. Remove G from S and from A.
     6. Otherwise, prune from S any code that would not give the same response if it was the secret sequence.
-    7. Apply minimax to find the set of next possible guesses,
+    7. Apply score_count to find the set of next possible guesses,
     For each code in A, calculate how many possibilities in S would be eliminated for each possible white+red peg score.
     The score of a code is the minimum number of possibilities it might eliminate from S.
     The best scores, are the lowest ones, since they assure that, in the worst case, the solution space gets as
@@ -35,6 +32,9 @@ class KnuthStrategy(Strategy):
 
     """strategy identification type"""
     _type = StrategyTypes.KNUTH
+
+    """score counter strategy"""
+    __score_counter = ParallelScore  # TODO make this customisable
 
     @staticmethod
     def _initial_guess(problem):
@@ -105,24 +105,6 @@ class KnuthStrategy(Strategy):
         """
         return (guess for guess in guesses if Problem.compare_sequences(guess, last_guess) == answer)
 
-    @staticmethod
-    def _count_score(combination, solutions):
-        """
-        Provides the
-        Sets in scores the score of the provided combination.
-        The score of a combination is the maximum size of the solution space, in the worst case,
-        if the said combination was the secret sequence.
-        :param combination: combination being tested
-        :param solutions: solution space
-        """
-        score_count = defaultdict(int)
-
-        for solution in solutions:
-            score = sum(Problem.compare_sequences(combination, solution))  # sum the two elements of the array
-            score_count[score] += 1
-
-        return combination, score_count[max(score_count, key=score_count.get)]
-
     def _mini_max(self, combinations, solutions):
         """
         Provide the list of minimum max scored sequences for the problem.
@@ -130,19 +112,7 @@ class KnuthStrategy(Strategy):
         :param solutions: solution space
         :return: the minimum max scored guesses
         """
-
-        pool = Pool(Config.POOL_SIZE)
-        combinations_space = list(combinations)
-
-        scores = {
-            combinations: score for combinations, score in pool.imap_unordered(
-                    partial(self._count_score, solutions=list(solutions)),
-                    iterable=combinations_space,
-                    chunksize=len(combinations_space) // Config.POOL_SIZE,
-            )
-        }
-
-        pool.close()
+        scores = self.__score_counter.run(combinations, solutions)
 
         # minimum max score
         min_score = min(scores.values())
