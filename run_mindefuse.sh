@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-python -m mindefuse
+python3 -m mindefuse

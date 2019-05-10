@@ -43,6 +43,6 @@ class SlurmCount(ScoreCount):
             # Here, 'proc' has finished with return code 'retcode'
             if retcode:
                 # Error handling
-                pass
+                print("Error happened")
 
             scores.update(proc.stdout)
