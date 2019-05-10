@@ -6,7 +6,7 @@ from ..score_count import ScoreCount
 from .slurm_config import SlurmConfig as Config
 
 
-class SlurmCount(ScoreCount):
+class SlurmScore(ScoreCount):
 
     @staticmethod
     def __chunks(l, n):
@@ -22,7 +22,7 @@ class SlurmCount(ScoreCount):
     @staticmethod
     def run(combinations, solutions):
 
-        chunked = SlurmCount.__chunks(solutions, Config.AVAILABLE_WORKERS)
+        chunked = SlurmScore.__chunks(solutions, Config.AVAILABLE_WORKERS)
 
         workers = [
             Popen(['run_count.sh', combinations, solution], stdout=PIPE, stderr=PIPE)

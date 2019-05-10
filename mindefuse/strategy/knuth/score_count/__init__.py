@@ -2,4 +2,4 @@
 
 from .score_count import ScoreCount
 from .parallel import ParallelScore
-from .slurm import SlurmCount
+from .slurm import SlurmScore

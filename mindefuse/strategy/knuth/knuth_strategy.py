@@ -4,7 +4,7 @@ from itertools import product, tee
 
 from ..strategy import Strategy
 from mindefuse.problem import Problem
-from .score_count import ParallelScore
+from .score_count import ParallelScore, SlurmScore
 from ..strategy_types import StrategyTypes
 
 
@@ -34,7 +34,7 @@ class KnuthStrategy(Strategy):
     _type = StrategyTypes.KNUTH
 
     """score counter strategy"""
-    __score_counter = ParallelScore  # TODO make this customisable
+    __score_counter = SlurmScore
 
     @staticmethod
     def _initial_guess(problem):
