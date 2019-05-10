@@ -1,5 +1,6 @@
 #!/usr/bin/env python3.7
 
+from typing import Iterable
 from functools import partial
 from multiprocessing import Pool
 
@@ -10,7 +11,7 @@ from .parallel_config import ParallelConfig as Config
 class ParallelScore(ScoreCount):
 
     @staticmethod
-    def run(combinations, solutions):
+    def run(combinations: Iterable, solutions: Iterable):
         pool = Pool(Config.POOL_SIZE)
         combinations_space = list(combinations)
 

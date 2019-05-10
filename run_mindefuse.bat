@@ -1,1 +1,1 @@
-python3 -m mindefuse
+python -m mindefuse
