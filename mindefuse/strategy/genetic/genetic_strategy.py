@@ -5,7 +5,7 @@ from deap import base, tools
 from mindefuse.problem import Problem
 from ..strategy import Strategy
 from ..strategy_types import StrategyTypes
-from .knuth_config import KnuthConfig as Config
+from .genetic_config import GeneticConfig as Config
 
 
 class GeneticStrategy(Strategy):
