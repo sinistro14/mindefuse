@@ -7,11 +7,14 @@ from mindefuse.problem import Problem
 
 
 class ScoreCount(ABC):
+    """
+    Abstract score count method
+    """
 
     @staticmethod
     def _count_score(combination, solutions):
         """
-        Sets in scores the score of the provided combination.
+        Provides the score of a combination.
         The score of a combination is the maximum size of the solution space, in the worst case,
         if the said combination was the secret sequence.
         :param combination: combination being tested

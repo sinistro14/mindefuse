@@ -2,4 +2,8 @@
 
 
 class ParallelConfig:
+    """
+    Multiprocessing score counter configuration
+    """
+
     POOL_SIZE = 4

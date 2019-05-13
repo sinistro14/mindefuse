@@ -8,6 +8,9 @@ from mindefuse.strategy import StrategyTypes
 class TestKnuthNumeric:
 
     @pytest.mark.parametrize("rounds, secret, solved", [
+        (12, "12", True),
+        (12, "37", True),
+        (12, "99", True),
         (12, "111", True),
         (12, "456", True),
         (12, "555", True),
