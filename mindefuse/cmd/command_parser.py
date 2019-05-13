@@ -33,7 +33,7 @@ class CommandParser:
             self.__set_sopt(Config.ALGORITHM),
             self.__set_opt(Config.ALGORITHM),
             action="store",
-            default=None,
+            default=StrategyTypes.KNUTH,
             choices=[StrategyTypes.KNUTH, StrategyTypes.GENETIC, StrategyTypes.SWASZEK],
             help="only useful when solving a problem"
         )

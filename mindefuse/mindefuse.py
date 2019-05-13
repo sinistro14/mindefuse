@@ -70,7 +70,7 @@ class Mindefuse:
     def solve_problem(self, rounds, algorithm=None, secret_type=None, secret_size=None, secret=None) -> Problem:
         """
         Tries to solve a problem, using the requested strategy, in the specified number of rounds
-        If no secret is defined, a new one is randomly generated with the provideded specs
+        If no secret is defined, a new one is randomly generated with the provided specs
         :param rounds: number of rounds of the problem
         :param algorithm: algorithm used to solve the problem
         :param secret_type: type of secret to generate
@@ -79,4 +79,6 @@ class Mindefuse:
         :return:
         """
         problem = self.generate_problem(rounds=rounds, secret_type=secret_type, secret_size=secret_size, secret=secret)
-        return self.get_strategy(algorithm).solve_problem(problem)
+        problem = self.get_strategy(algorithm).solve_problem(problem)
+        problem.print_history()
+        return problem

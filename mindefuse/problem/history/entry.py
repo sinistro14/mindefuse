@@ -28,5 +28,5 @@ class Entry:
         self.time = time
 
     def __str__(self):
-        return "Round: {} | Secret: {} | Guess: {} | Result: ({}, {}) | Time: {:.4f} ms"\
+        return "Round: {} | Secret: {} | Guess: {} | Result: ({}, {}) | Time: {:0>8.4f} s"\
             .format(self.round, self.secret, self.guess, self.answer[0], self.answer[1], self.time)
