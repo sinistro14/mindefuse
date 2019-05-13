@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 
-from deap import base, tools
+import random as rnd
 
 from mindefuse.problem import Problem
 from ..strategy import Strategy
@@ -31,31 +31,107 @@ class GeneticStrategy(Strategy):
         return "".join(time * el for time, el in zip(range(2, secret_size + 1), possible_elements))[:secret_size]
 
     @staticmethod
-    def _generate_combinations(possible_elements, sequence_size):
+    def _get_indexes(size):
         """
-        Generates all possible combinations of elements with a given sequence size
-        :param possible_elements: elements used to create the sequence
-        :param sequence_size: size of the sequence to create
-        :return: all possible combinations
+        Generates two random distinct indexes of a guess.
+        :param size: The size (length) of guess.
+        :return: A tuple with both indexes, in ascending order.
         """
-        return map(''.join, product(possible_elements, repeat=sequence_size))
+        idxs = rnd.sample(range(0, size), 2)
+        return min(idxs), max(idxs)
 
-    def _genetic_evolution(problem: Problem):
-        population = [[random.randint(1, len(problem.possible_elements())) for i in range(problem.secret_size())] for j in range(Config.MAX_POP_SIZE)]
+    @staticmethod
+    def _one_point(first_code, second_code):
+        """
+        Executes one-point crossover on the input codes.
+        :param first_code: The first code participating in the crossover.
+        :param second_code: The second code participating in the crossover.
+        :returns: A tuple of two codes.
+        """
+        idx = rnd.randint(0, len(first_code))
+        first_code[idx:], second_code[idx:] = second_code[idx:], first_code[idx:]
+        return first_code, second_code
+
+    @staticmethod
+    def _two_point(first_code, second_code):
+        """
+        Executes a two-point crossover on the input codes.
+        :param first_code: The first code participating in the crossover.
+        :param second_code: The second code participating in the crossover.
+        :returns: A tuple of two codes.
+        """
+        idx1, idx2 = GeneticStrategy._get_indexes(len(first_code))
+        first_code[idx1:idx2], second_code[idx1:idx2] = second_code[idx1:idx2], first_code[idx1:idx2]
+        return first_code, second_code
+
+    @staticmethod
+    def _crossover(first_code, second_code):
+        """
+        Executes either a one-point or two-point crossover on the input codes, based
+        on a certain probability (default: CROSSOVER_PROB = 0.5).
+        :param first_code: The first code participating in the crossover.
+        :param second_code: The second code participating in the crossover.
+        :returns: A tuple of two codes.
+        """
+        return GeneticStrategy._one_point(first_code, second_code) if rnd.random() > Config.CROSSOVER_PROB else GeneticStrategy._two_point(first_code, second_code)
+
+    @staticmethod
+    def _mutation(code, elements):
+        """
+        Executes a mutation that replaces the element of one randomly chosen position by
+        a random other element (from all possible elements).
+        :param code: The code to mutate.
+        :param elements: List of all possible elements.
+        :return: Mutated code.
+        """
+        code[rnd.randint(0, len(code))] = elements[rnd.randint(0, len(elements))]
+        return code
+
+    @staticmethod
+    def _permutation(code):
+        """
+        Executes a permutation that swaps two random elements of the code.
+        :param code: The code to permute.
+        :return: Permuted code.
+        """
+        idx1, idx2 = GeneticStrategy._get_indexes(len(code))
+        code[idx1], code[idx2] = code[idx2], code[idx1]
+        return code
+
+    @staticmethod
+    def _inversion(code):
+        """
+        Executes an inversion, where two positions are randomly picked,
+        and the sequence of elements between these positions is inverted.
+        :param code: The code on which the inversion will be made.
+        :return: Inverted code.
+        """
+        idx1, idx2 = GeneticStrategy._get_indexes(len(code))
+        code[idx1:idx2] = code[idx1:idx2][::-1]
+        return code
+
+    @staticmethod
+    def _random_guess(elements, problem):
+        """
+        Generates a random guess.
+        :param elements: List of all possible elements.
+        :param problem: Problem from which the guess will be generated
+        :return: Generated guess.
+        """
+        return [elements[rnd.randint(0, len(elements)-1)] for _ in range(problem.secret_size())]
+
+    def _genetic_evolution(self, problem: Problem, elements):
+        population = [self._random_guess(elements, problem) for _ in range(Config.MAX_POPULATION)]
 
         best_matches = []
         h = 1
         k = 0
 
-        toolbox = base.Toolbox()
+        #print(population[0])
+        """Remember to copy code, otherwise it changes in place!"""
+        #print(self._random_guess(elements, problem))
 
-        init = tools.initIterate(str, GeneticStrategy._generate_combinations())
-
-        toolbox.register("attr_bool", problem.possible_elements())
-        toolbox.register("individual", init, creator.Individual, toolbox.attr_bool, n=problem.secret_size())
-        toolbox.register("population", tools.initRepeat, list, toolbox.individual)
-
-        while len(best_matches) <= Config.MAX_POP_SIZE and h <= Config.MAX_GENERATIONS:
+        #while len(best_matches) <= Config.MAX_POP_SIZE and h <= Config.MAX_GENERATIONS:
 
     def solve_problem(self, problem):
         """
@@ -72,7 +148,10 @@ class GeneticStrategy(Strategy):
 
         answer = problem.check_proposal(proposal)
 
-        while not problem.finished():
+        self._genetic_evolution(problem, possible_elements)
+
+        #while not problem.finished():
+            #pass
 
 
 
