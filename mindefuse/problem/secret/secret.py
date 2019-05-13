@@ -21,11 +21,15 @@ class Secret:
     """secret sequence"""
     sequence = str
 
+    """number of times that each element in the secret sequence appears"""
+    __counted_elements = Counter
+
     def __init__(self, possible_elements, elements, types, sequence):
         self.possible_elements = possible_elements
         self.elements = elements
         self.types = types
         self.sequence = sequence
+        self.__counted = Counter(self.sequence)  # saves some computation when checking guesses
 
     @staticmethod
     def compare_sequences(sequence: str, proposal: str) -> Tuple[int, int]:
@@ -45,9 +49,7 @@ class Secret:
         proposal_count = Counter(proposal)
 
         # count all whites
-        whites = sum(min(value, proposal_count.get(char, 0)) for char, value in secret_count.items()) - reds
-
-        return whites, reds
+        return sum(min(value, proposal_count.get(char, 0)) for char, value in secret_count.items()) - reds, reds
 
     def compare(self, proposal: str) -> Tuple[int, int]:
         """
@@ -55,4 +57,14 @@ class Secret:
         :param proposal: sequence proposed as the correct secret sequence
         :return: tuple with number of whites and number of reds
         """
-        return self.compare_sequences(self.sequence, proposal)
+
+        assert isinstance(proposal, str) and self.elements == len(proposal)
+
+        # count all reds
+        reds = sum(secret_val == seq_val for secret_val, seq_val in zip(self.sequence, proposal))
+
+        # count number of chars
+        proposal_count = Counter(proposal)
+
+        # count all whites
+        return sum(min(value, proposal_count.get(char, 0)) for char, value in self.__counted.items()) - reds, reds
