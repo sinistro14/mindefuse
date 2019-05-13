@@ -7,7 +7,7 @@ class GeneticConfig:
     """
 
     CROSSOVER_PROB = 0.5
-    CROSSOVER_MUTATION_PROB = 0.03
+    MUTATION_PROB = 0.03
     PERMUTATION_PROB = 0.03
     INVERSION_PROB = 0.02
 
