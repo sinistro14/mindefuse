@@ -2,14 +2,13 @@
 
 from ..strategy import Strategy
 from ..strategy_types import StrategyTypes
+from ..agent import AgentNextPos, AgentSamePos, AgentRandom
 
 import random
 import itertools
 
 from collections import OrderedDict
 from collections import Counter
-
-from ..agent import AgentNextPos, AgentSamePos, AgentRandom
 
 class SwaszekStrategy(Strategy):
     """
