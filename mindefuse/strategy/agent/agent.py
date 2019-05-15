@@ -8,7 +8,6 @@ class Agent(ABC):
         """Agent type identifier"""
         pass
 
-    @abstractmethod
     def __init__(self):
         pass
 

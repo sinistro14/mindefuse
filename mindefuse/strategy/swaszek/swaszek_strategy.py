@@ -3,8 +3,13 @@
 from ..strategy import Strategy
 from ..strategy_types import StrategyTypes
 
-#from .agent import AgentRandom
+import random
+import itertools
 
+from collections import OrderedDict
+from collections import Counter
+
+from ..agent import AgentNextPos, AgentSamePos, AgentRandom
 
 class SwaszekStrategy(Strategy):
     """
@@ -19,7 +24,7 @@ class SwaszekStrategy(Strategy):
     #def swaszek(pegSolution, pegSpace):
         pegSpace = problem.possible_elements()
         numIt = 0
-        pegPossibilitiesList = [p for p in itertools.product(list(pegSpace), repeat=problem.secret_size())]
+        pegPossibilitiesList = [p for p in itertools.product(pegSpace, repeat=problem.secret_size())]
         
         agentList = []
         agentList.append(AgentRandom())
@@ -29,7 +34,7 @@ class SwaszekStrategy(Strategy):
         while(len(pegPossibilitiesList) > 1):
             #choice = pegPossibilitiesList[0]
             pegPossibilitiesListNext = pegPossibilitiesList
-            print(len(pegPossibilitiesList))
+            #print(len(pegPossibilitiesList))
             
             it = 0
             if(it < len(pegPossibilitiesList)):
@@ -39,25 +44,26 @@ class SwaszekStrategy(Strategy):
                     if not(aChoice == 0 or aChoice == None):
                         print(aChoice)
                         #redPegs, whitePegs = getAnswerV2(pegSolution, aChoice)
-                        redPegs, whitePegs = problem.check_proposal(aChoice)
-                        pegPossibilitiesListNext = eliminatePossibilities(pegPossibilitiesListNext, aChoice, redPegs, whitePegs)
+                        proposal = problem.check_proposal(self.create_proposal(aChoice))
+                        pegPossibilitiesListNext = eliminatePossibilities(pegPossibilitiesListNext, aChoice, proposal.reds, proposal.whites)
             else:
                 aChoice = agentList[0].agentChoice(pegPossibilitiesList)
                 print(aChoice)
-                redPegs, whitePegs = getAnswerV2(pegSolution, aChoice)
-                pegPossibilitiesListNext = eliminatePossibilities(pegPossibilitiesListNext, aChoice, redPegs, whitePegs)
+                #redPegs, whitePegs = getAnswerV2(pegSolution, aChoice)
+                proposal = problem.check_proposal(self.create_proposal(aChoice))
+                pegPossibilitiesListNext = eliminatePossibilities(pegPossibilitiesListNext, aChoice, proposal.reds, proposal.whites)
                 print(len(pegPossibilitiesListNext))
             
             #print(len(pegPossibilitiesListNext))  
             pegPossibilitiesList = pegPossibilitiesListNext
-            print(len(pegPossibilitiesList))
-            print("-------------------------")
+            #print(len(pegPossibilitiesList))
+            #print("-------------------------")
             numIt += 1
 
         print(pegPossibilitiesList[0])
         print(str(numIt) + " attempts")
 
-    class AgentSamePos:
+    """class AgentSamePos:
         def __init__(self, pos):
             self.pos = pos
             self.previous = None
@@ -88,7 +94,7 @@ class SwaszekStrategy(Strategy):
                 return possibilities[self.pos-1]
             else:
                 self.pos = 1
-                return possibilities[self.pos-1]
+                return possibilities[self.pos-1]"""
 
     def getAnswerV2(pegSolution, pegGuess):
         sol = list(pegSolution)
