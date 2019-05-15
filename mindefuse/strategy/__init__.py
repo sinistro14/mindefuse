@@ -6,3 +6,9 @@ from .null import NullStrategy
 from .knuth import KnuthStrategy
 from .genetic import GeneticStrategy
 from .swaszek import SwaszekStrategy
+
+import random
+import itertools
+
+from collections import OrderedDict
+from collections import Counter
