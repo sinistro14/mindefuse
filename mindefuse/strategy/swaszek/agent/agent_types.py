@@ -3,7 +3,7 @@
 
 class AgentTypes:
     """
-    Types of strategy available to solve a problem
+    Types of strategy available to solve a problem using Swaszek strategy
     """
     NULL = "null"
     RANDOM = "random"

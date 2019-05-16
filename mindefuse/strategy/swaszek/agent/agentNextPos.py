@@ -8,7 +8,7 @@ class AgentNextPos(Agent):
     def __init__(self):
         self.pos = 0
 
-    def agentChoice(self, possibilities):
+    def agent_choice(self, possibilities):
         if(self.pos < len(possibilities)):
             self.pos += 1
             return possibilities[self.pos-1]

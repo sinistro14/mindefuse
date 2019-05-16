@@ -1,9 +1,12 @@
+#!/usr/bin/env python3.7
+
 from .agent import Agent
-#from agent_types import AgentTypes
+from .agent_types import AgentTypes
+
 
 class AgentSamePos(Agent):
 
-     #_type = AgentTypes.SAMEPOS
+    _type = AgentTypes.SAMEPOS
 
     def __init__(self, pos):
         self.pos = pos
