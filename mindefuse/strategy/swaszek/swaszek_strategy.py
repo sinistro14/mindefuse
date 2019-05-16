@@ -32,7 +32,10 @@ class SwaszekStrategy(Strategy):
         ]
 
         answer_not_found = True
-        answer = None
+        #answer = None
+
+        previous_choices = []
+
         while answer_not_found:
             peg_possibilities_list_next = peg_possibilities_list
 
@@ -44,25 +47,26 @@ class SwaszekStrategy(Strategy):
                     agent_choice = a.agent_choice(peg_possibilities_list)
                     if not (agent_choice == 0 or agent_choice is None):
                         a_choice = ''.join(agent_choice)
-                        proposal = problem.check_proposal(self.create_proposal(a_choice))
-                        if(problem.finished()):
-                            answer = proposal
-                            answer_not_found = False
-                            break
-                        #peg_possibilities_list_next = self.eliminate_possibilities(peg_possibilities_list_next, a_choice, proposal.reds, proposal.whites)
-                        peg_possibilities_list = self.eliminate_possibilities(peg_possibilities_list, a_choice, proposal.reds, proposal.whites)
+                        if a_choice not in previous_choices:
+                            proposal = problem.check_proposal(self.create_proposal(a_choice))
+                            if(problem.finished()):
+                                #answer = proposal
+                                answer_not_found = False
+                                break
+
+                            peg_possibilities_list = self.eliminate_possibilities(peg_possibilities_list, a_choice, proposal.reds, proposal.whites)
+                            previous_choices.append(a_choice)
             else:
                 a_choice = ''.join(agent_list[0].agent_choice(peg_possibilities_list))
                 print(a_choice)
                 proposal = problem.check_proposal(self.create_proposal(a_choice))
                 if(problem.finished()):
-                    answer = proposal
+                    #answer = proposal
                     answer_not_found = False
                     break
-                #peg_possibilities_list_next = self.eliminate_possibilities(peg_possibilities_list_next, a_choice, proposal.reds, proposal.whites)
+
                 peg_possibilities_list = self.eliminate_possibilities(peg_possibilities_list, a_choice, proposal.reds, proposal.whites)
 
-            #peg_possibilities_list = peg_possibilities_list_next
             num_it += 1
 
         return problem
