@@ -228,7 +228,7 @@ class GeneticStrategy(Strategy):
 
             """Scales genetic evolution for higher complexities"""
             scale = 2
-            while len(eligibles) < 1:
+            while not eligibles:
                 eligibles = self._genetic_evolution(Config.MAX_POPULATION * scale, Config.MAX_GENERATIONS * scale,
                                                     problem, guesses)
                 scale += 1
