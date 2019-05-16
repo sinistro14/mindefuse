@@ -107,8 +107,9 @@ class SwaszekStrategy(Strategy):
             print(res)"""
             if res <= len(current_guess)-(red + white):
                 if SwaszekStrategy.get_num_matching_vals(possibility, current_guess) >= red:
-                    cntr += 1
-                    new_possibilities.append(possibility)
+                    if not( red + white == 0 and list(Counter(possibility)) == list(Counter(current_guess))):
+                        cntr += 1
+                        new_possibilities.append(possibility)
             
         return new_possibilities
 
