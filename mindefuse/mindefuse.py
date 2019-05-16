@@ -1,9 +1,10 @@
 #!/usr/bin/env python3.7
 
 from typing import Dict
+
 from .problem import ProblemBuilder, Problem
-from .strategy import Strategy, StrategyTypes
 from .strategy import NullStrategy, KnuthStrategy, GeneticStrategy, SwaszekStrategy
+from .strategy import Strategy, StrategyTypes
 
 
 class Mindefuse:

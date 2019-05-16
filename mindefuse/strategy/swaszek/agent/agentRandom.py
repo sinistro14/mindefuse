@@ -1,9 +1,12 @@
-from agent import Agent
-from agent_types import AgentTypes
+
+import random
+
+from .agent import Agent
+#from agent_types import AgentTypes
 
 class AgentRandom(Agent):
 
-     _type = AgentTypes.RANDOM
+     #_type = AgentTypes.RANDOM
 
     def __init__(self):
         self.previous = None

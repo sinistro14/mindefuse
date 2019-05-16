@@ -2,9 +2,8 @@
 
 from ..strategy import Strategy
 from ..strategy_types import StrategyTypes
-from ..agent import AgentNextPos, AgentSamePos, AgentRandom
+from .agent import AgentNextPos, AgentSamePos, AgentRandom
 
-import random
 import itertools
 
 from collections import OrderedDict
@@ -139,4 +138,3 @@ class SwaszekStrategy(Strategy):
             if(list1[i] == list2[i]):
                 total += 1
         return total
-        

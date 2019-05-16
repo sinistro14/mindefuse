@@ -1,9 +1,9 @@
-from agent import Agent
-from agent_types import AgentTypes
+from .agent import Agent
+#from agent_types import AgentTypes
 
 class AgentNextPos(Agent):
 
-     _type = AgentTypes.SAMEPOS
+     #_type = AgentTypes.SAMEPOS
 
     def __init__(self):
         self.pos = 0
