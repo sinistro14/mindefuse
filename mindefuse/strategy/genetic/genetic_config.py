@@ -12,4 +12,4 @@ class GeneticConfig:
     INVERSION_PROB = 0.02
 
     MAX_POPULATION = 60
-    MAX_GENERATIONS = 100
+    MAX_GENERATIONS = 120

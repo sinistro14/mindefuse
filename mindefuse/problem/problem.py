@@ -74,7 +74,7 @@ class Problem:
         Estimates the complexity of the problem
         :return: complexity metric
         """
-        return pow(self.__secret.elements, self.secret_size())
+        return pow(len(self.__secret.possible_elements), self.secret_size())
 
     def __time_passed(self):
         """

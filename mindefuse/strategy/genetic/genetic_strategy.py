@@ -73,7 +73,8 @@ class GeneticStrategy(Strategy):
         :param second_code: The second code participating in the crossover.
         :returns: A tuple of two codes.
         """
-        return GeneticStrategy._one_point(first_code, second_code) if rnd.random() > Config.CROSSOVER_PROB else GeneticStrategy._two_point(first_code, second_code)
+        return GeneticStrategy._one_point(first_code, second_code) if rnd.random() > Config.CROSSOVER_PROB \
+            else GeneticStrategy._two_point(first_code, second_code)
 
     @staticmethod
     def _mutation(code, elements):
@@ -84,7 +85,7 @@ class GeneticStrategy(Strategy):
         :param elements: List of all possible elements.
         :return: Mutated code.
         """
-        code[rnd.randint(0, len(code)-1)] = elements[rnd.randint(0, len(elements)-1)]
+        code[rnd.randint(0, len(code) - 1)] = elements[rnd.randint(0, len(elements) - 1)]
         return code
 
     @staticmethod
@@ -118,7 +119,7 @@ class GeneticStrategy(Strategy):
         :param problem: Problem from which the guess will be generated
         :return: Generated guess.
         """
-        return [elements[rnd.randint(0, len(elements)-1)] for _ in range(problem.secret_size())]
+        return [elements[rnd.randint(0, len(elements) - 1)] for _ in range(problem.secret_size())]
 
     @staticmethod
     def _fitness_score(trial, guesses, problem):
@@ -126,9 +127,7 @@ class GeneticStrategy(Strategy):
         Computes fitness score associated with a potential sequence/code. This fitness score is calculated based on
         previous guesses. We compare the sequence with each guess, retrieving the difference between whites and reds
         from them. Said differences are then used to calculate the score using the formula:
-        2 x sum_dif(whites) + sum_dif(reds)
-        Where an additional constant, 2 x P x (i - 1), is added at each red difference in order to slick the values
-        of the fitness function.
+        sum_dif(reds) + sum_dif(whites)
         :param trial: Sequence to test.
         :param guesses: List of previous guesses.
         :param problem: Problem used to compare sequences.
@@ -136,28 +135,31 @@ class GeneticStrategy(Strategy):
         """
         sum_whites, sum_reds = 0, 0
         pos = problem.secret_size()
-        for i in range(1, len(guesses)+1):
+        for i in range(1, len(guesses) + 1):
             guess = guesses[i-1]
             guess_whites, guess_reds = guess.whites, guess.reds
 
             play_whites, play_reds = problem.compare_sequences(guess.sequence, "".join(trial))
 
+            sum_reds += abs(play_reds - guess_reds)
             sum_whites += abs(play_whites - guess_whites)
-            sum_reds += abs(play_reds - guess_reds) + 2 * pos * (i - 1)
 
-        return 2 * sum_whites + sum_reds
+        return sum_reds + sum_whites
 
-    def _genetic_evolution(self, problem: Problem, elements, guesses):
-        population = [self._random_guess(elements, problem) for _ in range(Config.MAX_POPULATION)]
+    def _genetic_evolution(self, max_population, max_generations, problem: Problem, guesses):
+
+        elements = problem.possible_elements()
+
+        population = [self._random_guess(elements, problem) for _ in range(max_population)]
 
         eligible = []
         h = 1
 
-        while len(eligible) <= Config.MAX_POPULATION and h <= Config.MAX_GENERATIONS:
+        while len(eligible) <= max_population and h <= max_generations:
 
-            offspring = list()
+            offspring = []
 
-            for i in range(len(population)-1):
+            for i in range(len(population) - 1):
 
                 children = self._crossover(population[i], population[i+1])
 
@@ -181,6 +183,8 @@ class GeneticStrategy(Strategy):
                     eligible.append("".join(child))
             h += 1
 
+        return eligible
+
     def solve_problem(self, problem):
         """
         Solves a problem using Genetic algorithm
@@ -197,11 +201,32 @@ class GeneticStrategy(Strategy):
         answer = problem.check_proposal(proposal)
 
         guesses = [proposal]
+        eligibles = []
 
-        self._genetic_evolution(problem, possible_elements, guesses)
+        while not problem.finished():
 
-        #while not problem.finished():
-            #self._genetic_evolution(problem, possible_elements)
+            eligibles = self._genetic_evolution(Config.MAX_POPULATION, Config.MAX_GENERATIONS, problem, guesses)
+
+            scale = 2
+
+            while len(eligibles) < 1:
+                eligibles = self._genetic_evolution(Config.MAX_POPULATION * scale, Config.MAX_GENERATIONS * scale,
+                                                    problem, guesses)
+                scale += 1
+
+            guess = eligibles[rnd.randint(0, len(eligibles) - 1)]
+
+            proposal = self.create_proposal(guess)
+
+            guesses.append(proposal)
+
+            answer = problem.check_proposal(proposal)
+
+        print(problem.complexity)
+        problem.print_history()
+        return problem
+
+
 
 
 
