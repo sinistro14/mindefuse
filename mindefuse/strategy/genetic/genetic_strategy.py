@@ -10,7 +10,16 @@ from .genetic_config import GeneticConfig as Config
 
 class GeneticStrategy(Strategy):
     """
-    Genetic strategy
+    Genetic algorithm strategy
+    Given the number of possible elements of the secret C, and the size of the secret sequence, S,
+    1. Play fixed initial guess and record its response.
+    2. While game is not finished:
+    3.      Initialize random population.
+    4.      Run genetic algorithm on population to generate children.
+    5.      Compute fitness score for each child.
+    6.      Return eligible children.
+    7. Play one of the eligible guesses.
+    8. Repeat from step 2.
     """
 
     _type = StrategyTypes.GENETIC
@@ -147,7 +156,19 @@ class GeneticStrategy(Strategy):
         return sum_reds + sum_whites
 
     def _genetic_evolution(self, max_population, max_generations, problem: Problem, guesses):
-
+        """
+        Performs the genetic evolution of a population (randomly generated), which is a process inspired by natural
+        selection, by the usage bio-inspired operators. In this implementation, these operators consist of Crossover
+        (both one-point and two-point variations with 0.5 probability each), Mutation and Permutation (probability of
+        0.03) and Inversion(probability of 0.02). An eligibility list of potential guesses is populated with the fitness
+        score of each guess. In case a generated child is already present in the population, we randomly generate a
+        guess in order to diversify our pool of guesses.
+        :param max_population: The maximum size of initial population and eligibility list.
+        :param max_generations: The maximum number of times the population suffers the genetic evolution.
+        :param problem: Problem used generate the population from.
+        :param guesses: List of previous guesses.
+        :return: List of eligible (fitness_score = 0) guesses.
+        """
         elements = problem.possible_elements()
 
         population = [self._random_guess(elements, problem) for _ in range(max_population)]
@@ -157,6 +178,7 @@ class GeneticStrategy(Strategy):
 
         while len(eligible) <= max_population and h <= max_generations:
 
+            """Genetic Evolution"""
             offspring = []
 
             for i in range(len(population) - 1):
@@ -178,6 +200,7 @@ class GeneticStrategy(Strategy):
 
                     offspring.append(child)
 
+            """Eligibility Test"""
             for child in offspring:
                 if self._fitness_score(child, guesses, problem) == 0 and "".join(child) not in eligible:
                     eligible.append("".join(child))
@@ -191,45 +214,33 @@ class GeneticStrategy(Strategy):
         :param problem: problem to solve
         :return: problem after running the algorithm
         """
-        secret_size = problem.secret_size()
-        possible_elements = problem.possible_elements()
-
         current_guess = self._initial_guess(problem)
 
         proposal = self.create_proposal(current_guess)
 
-        answer = problem.check_proposal(proposal)
+        problem.check_proposal(proposal)
 
         guesses = [proposal]
-        eligibles = []
 
         while not problem.finished():
 
             eligibles = self._genetic_evolution(Config.MAX_POPULATION, Config.MAX_GENERATIONS, problem, guesses)
 
+            """Scales genetic evolution for higher complexities"""
             scale = 2
-
             while len(eligibles) < 1:
                 eligibles = self._genetic_evolution(Config.MAX_POPULATION * scale, Config.MAX_GENERATIONS * scale,
                                                     problem, guesses)
                 scale += 1
 
+            """Randomly select an eligible guess"""
             guess = eligibles[rnd.randint(0, len(eligibles) - 1)]
 
             proposal = self.create_proposal(guess)
 
             guesses.append(proposal)
 
-            answer = problem.check_proposal(proposal)
+            problem.check_proposal(proposal)
 
-        print(problem.complexity)
         problem.print_history()
         return problem
-
-
-
-
-
-
-        
-
