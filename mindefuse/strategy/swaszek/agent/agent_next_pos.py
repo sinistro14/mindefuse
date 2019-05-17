@@ -1,12 +1,9 @@
 #!/usr/bin/env python3.7
 
 from .agent import Agent
-from .agent_types import AgentTypes
 
 
 class AgentNextPos(Agent):
-
-    _type = AgentTypes.SAMEPOS
 
     def __init__(self):
         self.pos = 0

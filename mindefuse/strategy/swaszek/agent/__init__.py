@@ -6,7 +6,6 @@ import itertools
 from collections import OrderedDict
 from collections import Counter
 
-from .agent_types import AgentTypes
-from .agentRandom import AgentRandom
-from .agentSamePos import AgentSamePos
-from .agentNextPos import AgentNextPos
+from .agent_random import AgentRandom
+from .agent_same_pos import AgentSamePos
+from .agent_next_pos import AgentNextPos
