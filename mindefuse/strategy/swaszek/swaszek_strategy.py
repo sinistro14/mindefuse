@@ -1,12 +1,6 @@
 #!/usr/bin/env python3.7
 
-from ..strategy import Strategy
-from ..strategy_types import StrategyTypes
-from .agent import AgentNextPos, AgentSamePos, AgentRandom
-
 import itertools
-from collections import OrderedDict
-from collections import Counter
 import copy
 
 from ..strategy import Strategy
@@ -47,51 +41,45 @@ class SwaszekStrategy(Strategy):
                 agent_choice = ''.join(a.agent_choice(peg_possibilities_list))
                 proposal = agent_problem.check_proposal(self.create_proposal(agent_choice))
 
-                if(best_problem.finished() or proposal.reds == 4):
+                if best_problem.finished() or proposal.reds == 4:
                     answer_not_found = False
                     best_proposal = proposal
                     best_problem = agent_problem
                     return best_problem
 
-                if not (proposal is None):
-                    if(best_proposal is None or self.better_proposal(proposal, best_proposal)):
+                if proposal is not None:
+                    if best_proposal is None or self.better_proposal(proposal, best_proposal):
                         best_proposal = proposal
                         best_problem = agent_problem
 
-            peg_possibilities_list = self.prune_guesses(self, peg_possibilities_list, best_proposal.sequence, best_proposal.reds, best_proposal.whites)
-
+            peg_possibilities_list = self.prune_guesses(
+                peg_possibilities_list,
+                best_proposal.sequence,
+                best_proposal.reds,
+                best_proposal.whites
+            )
 
         return best_problem
 
     @staticmethod
     def better_proposal(proposal1, proposal2):
-        if(proposal1.reds + proposal1.whites > proposal2.reds + proposal2.whites):
+        if proposal1.reds + proposal1.whites > proposal2.reds + proposal2.whites:
             return True
-        elif(proposal1.reds + proposal1.whites == proposal2.reds + proposal2.whites):
-            if(proposal1.whites > proposal2.whites):
+        elif proposal1.reds + proposal1.whites == proposal2.reds + proposal2.whites:
+            if proposal1.whites > proposal2.whites:
                 return True
         return False
 
     @staticmethod
-    def prune_guesses(self, possibilities, current_guess, red, white):
-        """
-        Provides guesses after pruning all the sequences that would not provide the same response.
-        :param guesses: guesses to be pruned
-        :param last_guess: last sequence proposed as a solution
-        :param answer: response to last_guess
-        :return: pruned guesses
-        """
+    def prune_guesses(possibilities, current_guess, red, white):
         new_possibilities = []
 
         for possibility in possibilities:
             possib = ''.join(possibility)
-            if(possib != current_guess):
+            if possib != current_guess:
                 answer = Problem.compare_sequences(possib, current_guess)
-                if(answer == (white, red)):
+                if answer == (white, red):
                     new_possibilities.append(possibility)
-
-        if(len(new_possibilities) == 1):
-            print(new_possibilities[0])
 
         return new_possibilities
 
