@@ -42,7 +42,8 @@ setup(
     tests_require=[
         'pytest',
         'mock',
-        'pytest-mock'
+        'pytest-mock',
+        'pytest-repeat',
     ],
 
 
