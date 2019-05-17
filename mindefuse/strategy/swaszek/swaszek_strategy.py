@@ -24,7 +24,6 @@ class SwaszekStrategy(Strategy):
 
     def solve_problem(self, problem):
         peg_space = problem.possible_elements()
-        num_it = 0
         peg_possibilities_list = [p for p in itertools.product(peg_space, repeat=problem.secret_size())]
         
         agent_list = [
@@ -34,8 +33,6 @@ class SwaszekStrategy(Strategy):
         ]
 
         answer_not_found = True
-
-        previous_choices = []
 
         best_problem = problem
 
@@ -48,8 +45,6 @@ class SwaszekStrategy(Strategy):
                 proposal = agent_problem.check_proposal(self.create_proposal(agent_choice))
 
                 if(best_problem.finished() or proposal.reds == 4):
-                    answer_not_found = False
-                    best_proposal = proposal
                     best_problem = agent_problem
                     return best_problem
 
