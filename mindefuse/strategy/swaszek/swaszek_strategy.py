@@ -34,6 +34,10 @@ class SwaszekStrategy(Strategy):
             best_proposal = None
 
             for a in agent_list:
+
+                if best_problem != None and best_problem.finished():
+                    return best_problem
+
                 agent_problem = copy.deepcopy(best_problem)
                 agent_choice = ''.join(a.agent_choice(peg_possibilities_list))
                 proposal = agent_problem.check_proposal(self.create_proposal(agent_choice))
