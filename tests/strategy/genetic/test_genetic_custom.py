@@ -4,7 +4,6 @@ import pytest
 from mindefuse.strategy import StrategyTypes
 
 
-@pytest.mark.skip
 @pytest.mark.custom
 class TestGeneticNumeric:
 
