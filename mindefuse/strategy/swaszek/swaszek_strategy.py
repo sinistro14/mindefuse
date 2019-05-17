@@ -26,30 +26,27 @@ class SwaszekStrategy(Strategy):
             AgentNextPos()
         ]
 
-        answer_not_found = True
-
         best_problem = problem
 
-        while answer_not_found:
+        while True:
             best_proposal = None
 
-            for a in agent_list:
+            for agent in agent_list:
 
-                if best_problem != None and best_problem.finished():
+                if best_problem and best_problem.finished():
                     return best_problem
 
                 agent_problem = copy.deepcopy(best_problem)
-                agent_choice = ''.join(a.agent_choice(peg_possibilities_list))
+                agent_choice = ''.join(agent.agent_choice(peg_possibilities_list))
                 proposal = agent_problem.check_proposal(self.create_proposal(agent_choice))
 
                 if best_problem.finished() or proposal.reds == 4:
                     best_problem = agent_problem
                     return best_problem
 
-                if proposal is not None:
-                    if best_proposal is None or self.better_proposal(proposal, best_proposal):
-                        best_proposal = proposal
-                        best_problem = agent_problem
+                if proposal and (not best_proposal or self.better_proposal(proposal, best_proposal)):
+                    best_proposal = proposal
+                    best_problem = agent_problem
 
             peg_possibilities_list = self.prune_guesses(
                 peg_possibilities_list,
@@ -62,12 +59,9 @@ class SwaszekStrategy(Strategy):
 
     @staticmethod
     def better_proposal(proposal1, proposal2):
-        if proposal1.reds + proposal1.whites > proposal2.reds + proposal2.whites:
-            return True
-        elif proposal1.reds + proposal1.whites == proposal2.reds + proposal2.whites:
-            if proposal1.whites > proposal2.whites:
-                return True
-        return False
+        prop1 = proposal1.reds + proposal1.whites
+        prop2 = proposal2.reds + proposal2.whites
+        return (prop1 > prop2) or (prop1 == prop2 and proposal1.whites > proposal2.whites)
 
     @staticmethod
     def prune_guesses(possibilities, current_guess, red, white):
@@ -75,17 +69,11 @@ class SwaszekStrategy(Strategy):
 
         for possibility in possibilities:
             possib = ''.join(possibility)
-            if possib != current_guess:
-                answer = Problem.compare_sequences(possib, current_guess)
-                if answer == (white, red):
-                    new_possibilities.append(possibility)
+            if (possib != current_guess) and (Problem.compare_sequences(possib, current_guess) == (white, red)):
+                new_possibilities.append(possibility)
 
         return new_possibilities
 
     @staticmethod
     def get_num_matching_vals(list1, list2):
-        total = 0
-        for i in range(0, len(list1)):
-            if list1[i] == list2[i]:
-                total += 1
-        return total
+        return len([e1 for e1, e2 in zip(list1, list2) if e1 == e2])

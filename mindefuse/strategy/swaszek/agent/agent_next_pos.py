@@ -11,7 +11,6 @@ class AgentNextPos(Agent):
     def agent_choice(self, possibilities):
         if self.pos < len(possibilities):
             self.pos += 1
-            return possibilities[self.pos - 1]
         else:
             self.pos = 1
-            return possibilities[self.pos - 1]
+        return possibilities[self.pos - 1]
