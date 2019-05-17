@@ -72,32 +72,6 @@ class SwaszekStrategy(Strategy):
                 return True
         return False
 
-
-    @staticmethod
-    def eliminate_possibilities(possibilities, current_guess, red, white):
-        """
-        Provides guesses after pruning all the sequences that would not provide the same response.
-        :param possibilities: guesses to be pruned
-        :param current_guess: sequence proposed as a solution
-        :param red: response of reds to current_guess
-        :param white: response of whites to current_guess
-        :return: pruned possibilities
-        """
-        new_possibilities = []
-
-        cntr = 0
-        for possibility in possibilities:
-            res = len(list((Counter(possibility) - Counter(current_guess)).elements()))
-            if(''.join(possibility) != current_guess and white != 4):
-                if res <= len(current_guess)-(red + white):
-                    if SwaszekStrategy.get_num_matching_vals(possibility, current_guess) >= red:
-                        if not( red + white == 0 and list(Counter(possibility)) == list(Counter(current_guess))):
-                            cntr += 1
-                            new_possibilities.append(possibility)
-            
-        return new_possibilities
-
-
     @staticmethod
     def prune_guesses(self, possibilities, current_guess, red, white):
         """
