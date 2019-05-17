@@ -7,10 +7,12 @@ from .agent import AgentNextPos, AgentSamePos, AgentRandom
 import itertools
 from collections import OrderedDict
 from collections import Counter
+import copy
 
 from ..strategy import Strategy
 from ..strategy_types import StrategyTypes
 from .agent import AgentNextPos, AgentSamePos, AgentRandom
+from mindefuse.problem import Problem
 
 
 class SwaszekStrategy(Strategy):
@@ -32,85 +34,91 @@ class SwaszekStrategy(Strategy):
         ]
 
         answer_not_found = True
-        #answer = None
 
         previous_choices = []
 
+        best_problem = problem
+
         while answer_not_found:
-            peg_possibilities_list_next = peg_possibilities_list
+            best_proposal = None
 
-            it = 0
-            if it < len(peg_possibilities_list):
-                #for a in agent_list:
-                    a = agent_list[0]
-                    it += 1
-                    agent_choice = a.agent_choice(peg_possibilities_list)
-                    if not (agent_choice == 0 or agent_choice is None):
-                        a_choice = ''.join(agent_choice)
-                        if a_choice not in previous_choices:
-                            proposal = problem.check_proposal(self.create_proposal(a_choice))
-                            if(problem.finished()):
-                                #answer = proposal
-                                answer_not_found = False
-                                break
+            for a in agent_list:
+                agent_problem = copy.deepcopy(best_problem)
+                agent_choice = ''.join(a.agent_choice(peg_possibilities_list))
+                proposal = agent_problem.check_proposal(self.create_proposal(agent_choice))
 
-                            peg_possibilities_list = self.eliminate_possibilities(peg_possibilities_list, a_choice, proposal.reds, proposal.whites)
-                            previous_choices.append(a_choice)
-            else:
-                a_choice = ''.join(agent_list[0].agent_choice(peg_possibilities_list))
-                print(a_choice)
-                proposal = problem.check_proposal(self.create_proposal(a_choice))
-                if(problem.finished()):
-                    #answer = proposal
+                if(best_problem.finished() or proposal.reds == 4):
                     answer_not_found = False
-                    break
+                    best_proposal = proposal
+                    best_problem = agent_problem
+                    return best_problem
 
-                peg_possibilities_list = self.eliminate_possibilities(peg_possibilities_list, a_choice, proposal.reds, proposal.whites)
+                if not (proposal is None):
+                    if(best_proposal is None or self.better_proposal(proposal, best_proposal)):
+                        best_proposal = proposal
+                        best_problem = agent_problem
 
-            num_it += 1
+            peg_possibilities_list = self.prune_guesses(self, peg_possibilities_list, best_proposal.sequence, best_proposal.reds, best_proposal.whites)
 
-        return problem
+
+        return best_problem
 
     @staticmethod
-    def get_answer_V2(peg_solution, peg_guess):
-        sol = list(peg_solution)
-        guess = list(peg_guess)
-        in_guess = list(OrderedDict.fromkeys(peg_guess))
-        
-        checked = []
-        red = 0
-        white = 0
-        
-        for i in range(0, len(guess)):
-            if guess[i] == sol[i]:
-                red += 1
-                checked.append(i)
-                
-        for j in in_guess:
-            for k in range(0, len(sol)):
-                if k not in checked and sol[k] == j:
-                    white += 1
-        
-        return red, white
+    def better_proposal(proposal1, proposal2):
+        if(proposal1.reds + proposal1.whites > proposal2.reds + proposal2.whites):
+            return True
+        elif(proposal1.reds + proposal1.whites == proposal2.reds + proposal2.whites):
+            if(proposal1.whites > proposal2.whites):
+                return True
+        return False
+
 
     @staticmethod
     def eliminate_possibilities(possibilities, current_guess, red, white):
+        """
+        Provides guesses after pruning all the sequences that would not provide the same response.
+        :param possibilities: guesses to be pruned
+        :param current_guess: sequence proposed as a solution
+        :param red: response of reds to current_guess
+        :param white: response of whites to current_guess
+        :return: pruned possibilities
+        """
         new_possibilities = []
 
         cntr = 0
         for possibility in possibilities:
-            #res = possibility - current_guess
             res = len(list((Counter(possibility) - Counter(current_guess)).elements()))
-            """print("possibility: ")
-            print(possibility)
-            print("res: ")
-            print(res)"""
-            if res <= len(current_guess)-(red + white):
-                if SwaszekStrategy.get_num_matching_vals(possibility, current_guess) >= red:
-                    if not( red + white == 0 and list(Counter(possibility)) == list(Counter(current_guess))):
-                        cntr += 1
-                        new_possibilities.append(possibility)
+            if(''.join(possibility) != current_guess and white != 4):
+                if res <= len(current_guess)-(red + white):
+                    if SwaszekStrategy.get_num_matching_vals(possibility, current_guess) >= red:
+                        if not( red + white == 0 and list(Counter(possibility)) == list(Counter(current_guess))):
+                            cntr += 1
+                            new_possibilities.append(possibility)
             
+        return new_possibilities
+
+
+    @staticmethod
+    def prune_guesses(self, possibilities, current_guess, red, white):
+        """
+        Provides guesses after pruning all the sequences that would not provide the same response.
+        :param guesses: guesses to be pruned
+        :param last_guess: last sequence proposed as a solution
+        :param answer: response to last_guess
+        :return: pruned guesses
+        """
+        new_possibilities = []
+
+        for possibility in possibilities:
+            possib = ''.join(possibility)
+            if(possib != current_guess):
+                answer = Problem.compare_sequences(possib, current_guess)
+                if(answer == (white, red)):
+                    new_possibilities.append(possibility)
+
+        if(len(new_possibilities) == 1):
+            print(new_possibilities[0])
+
         return new_possibilities
 
     @staticmethod
