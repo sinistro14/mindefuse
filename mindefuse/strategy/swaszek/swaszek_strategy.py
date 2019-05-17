@@ -38,7 +38,7 @@ class SwaszekStrategy(Strategy):
                 agent_choice = ''.join(a.agent_choice(peg_possibilities_list))
                 proposal = agent_problem.check_proposal(self.create_proposal(agent_choice))
 
-                if(best_problem.finished() or proposal.reds == 4):
+                if best_problem.finished() or proposal.reds == 4:
                     best_problem = agent_problem
                     return best_problem
 

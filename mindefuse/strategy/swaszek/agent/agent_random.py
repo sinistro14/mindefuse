@@ -7,14 +7,11 @@ from .agent import Agent
 
 class AgentRandom(Agent):
 
-    #def __init__(self):
-        #self.previous = None
-
     def agent_choice(self, possibilities):
         """
         Randomly pick a choice from the possibilities list,
         if the choice is the same as the previous pick a new one
         """
-        if(len(possibilities) > 0):
+        if possibilities:
             return random.choice(possibilities)
         return None

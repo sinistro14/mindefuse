@@ -9,6 +9,6 @@ class AgentSamePos(Agent):
         self.pos = pos
 
     def agent_choice(self, possibilities):
-        if(self.pos > len(possibilities)-1):
-            return possibilities[len(possibilities)-1]
+        if self.pos > len(possibilities) - 1:
+            return possibilities[len(possibilities) - 1]
         return possibilities[self.pos]
