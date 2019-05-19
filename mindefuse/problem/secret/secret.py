@@ -3,6 +3,8 @@
 from typing import List, Tuple
 from collections import Counter
 
+from .secret_types import SecretTypes
+
 
 class Secret:
     """
@@ -15,8 +17,11 @@ class Secret:
     """number of elements in this secret"""
     elements = int
 
+    """type of secret"""
+    type = str
+
     """number of possible types of an element in the sequence"""
-    types = int
+    types = SecretTypes
 
     """secret sequence"""
     sequence = str
@@ -24,9 +29,10 @@ class Secret:
     """number of times that each element in the secret sequence appears"""
     __counted_elements = Counter
 
-    def __init__(self, possible_elements, elements, types, sequence):
+    def __init__(self, possible_elements, elements, secret_type, types, sequence):
         self.possible_elements = possible_elements
         self.elements = elements
+        self.type = secret_type
         self.types = types
         self.sequence = sequence
         self.__counted = Counter(self.sequence)  # saves some computation when checking guesses

@@ -26,7 +26,16 @@ class History:
             Entry(round_val=round_val, secret=secret, guess=guess, answer=answer, time=time)
         )
 
+    def duration(self) -> int:
+        """
+        Provides the time taken to solve a problem, in seconds
+        :return: time taken trying to solve the problem, or 0 if not yet run
+        """
+        if self.entries:
+            return self.entries[-1].time
+        return 0
+
     def __str__(self):
-        final = (35 * "-") + "History" + (35 * '-') + "\n"
+        final = "{}History{}\n".format(35 * "-", 35 * "-")
         final += "\n".join(str(entry) for entry in self.entries)
         return final
