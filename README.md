@@ -68,6 +68,22 @@ Round: 11 | Secret: iekl | Guess: iekl | Result: (0, 4) | Time: 039.8143 s
 The game was won!!!
 ```
 
+4. Generate and solve a problem with a randomly generated secret of numeric elements with size 4,
+in less than 12 rounds, using Genetic strategy. The generated secret was _8984_.
+```
+(mindefuse) > run_strategy -r 12 -a genetic -t numeric -s 4
+-----------------------------------History-----------------------------------
+Round: 1 | Secret: 8984 | Guess: 0011 | Result: (0, 0) | Time: 000.0000 s
+Round: 2 | Secret: 8984 | Guess: 8866 | Result: (1, 1) | Time: 000.0173 s
+Round: 3 | Secret: 8984 | Guess: 8287 | Result: (0, 2) | Time: 000.1418 s
+Round: 4 | Secret: 8984 | Guess: 3286 | Result: (0, 1) | Time: 001.8032 s
+Round: 5 | Secret: 8984 | Guess: 8989 | Result: (0, 3) | Time: 003.8772 s
+Round: 6 | Secret: 8984 | Guess: 8985 | Result: (0, 3) | Time: 006.3854 s
+Round: 7 | Secret: 8984 | Guess: 8988 | Result: (0, 3) | Time: 009.4058 s
+Round: 8 | Secret: 8984 | Guess: 8984 | Result: (0, 4) | Time: 012.7700 s
+The game was won!!!
+```
+
 ## License
 
 This project is licensed under the MIT License - see [LICENSE](LICENSE) file for details.
