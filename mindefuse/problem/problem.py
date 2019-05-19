@@ -187,7 +187,7 @@ class Problem:
         """
         Prints the history of the problem
         """
-        history = str(self.history) + '\n'
+        history = "{}\n".format(self.history)
         if self.__solved:
             history += "The game was won!!!"
         else:
