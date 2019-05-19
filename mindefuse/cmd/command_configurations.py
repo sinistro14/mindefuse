@@ -7,7 +7,7 @@ class CommandConfigurations:
     """
 
     # Main cmd configuration
-    APPLICATION = "Mindefuse"
+    APPLICATION = "mindefuse"
 
     # Parser configuration
     NAME = "run_strategy"

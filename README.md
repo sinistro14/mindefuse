@@ -4,8 +4,8 @@
 Hostage situation negotiator simulation
 
 ## Prerequisites
-The application is compatible with Linux based systems, and Python version 3.7 is assumed to be installed,
-as well as pip package manager utility and setuptools module.
+The application is compatible with Linux based systems.
+Python version 3.7 is assumed to be installed, as well as pip package manager utility and setuptools module.
 
 ## Installation
 ```bash
@@ -20,26 +20,26 @@ as well as pip package manager utility and setuptools module.
 
 ## Commands
 
-Further information is provided while running the application by using '<command> -h' instruction.
+Further information is provided while running the application by using _\<command\> -h_ instruction.
 
 * help - list the available commands
 * exit | quit - exit the application
-* generate_problem - Generates a secret of a given type and size.
-* run_strategy - Generates and solves a problem in a given number of rounds, using the requested strategy.
+* generate_problem - Generates a secret of a given type and size
+* run_strategy - Generates and solves a problem in a given number of rounds, using the requested strategy
 
 ## Example run
 
-In order to test the application, TODO
+To exercise some of the available commands, one can try:
 
 1. Generate a problem of size 10 and type string, that must be solved in less than 12 rounds.
 ```
-(Mindefuse) > generate_problem -r 12 -t string -s 10
+(mindefuse) > generate_problem -r 12 -t string -s 10
 EhGnaXhAOH
 ```
 
 2. Generate and solve a problem with secret sequence _378_ in less than 12 rounds, using Knuth strategy.
 ```
-(Mindefuse) > run_strategy -r 12 -a knuth --secret 378
+(mindefuse) > run_strategy -r 12 -a knuth --secret 378
 -----------------------------------History-----------------------------------
 Round: 1 | Secret: 378 | Guess: 001 | Result: (0, 0) | Time: 000.0000 s
 Round: 2 | Secret: 378 | Guess: 223 | Result: (1, 0) | Time: 003.9081 s
@@ -52,7 +52,7 @@ The game was won!!!
 
 3. Generate and solve a problem with secret sequence _iekl_ in less than 12 rounds, using Genetic strategy.
 ```
-(Mindefuse) > run_strategy -r 12 -a genetic --secret iekl
+(mindefuse) > run_strategy -r 12 -a genetic --secret iekl
 -----------------------------------History-----------------------------------
 Round: 1 | Secret: iekl | Guess: aabb | Result: (0, 0) | Time: 000.0000 s
 Round: 2 | Secret: iekl | Guess: ogdg | Result: (0, 0) | Time: 000.0094 s
