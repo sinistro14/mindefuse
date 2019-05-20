@@ -2,15 +2,18 @@
 
 from typing import Union, List
 from timeit import default_timer as time
+from random import choice
+from math import floor
 
 from .secret import Secret
 from .secret import SecretTypes
 from .secret import SecretFactory
 from .proposal import Proposal
 from .history import History
+from .responses import Responses
 
 
-class Problem:
+class Problem(Responses):
     """
     Representation of a Mastermind style problem
     """
@@ -92,6 +95,11 @@ class Problem:
         """
         return self.__rounds - self.elapsed_rounds
 
+    def _generate_response(self, answer):
+        score = floor(4 * (2 * answer[1] + answer[0]) / (2 * self.secret_size()))
+        print('Negotiation round {} -> Captor: {}'.format(self.__current_round(),
+                                                          choice(Responses.MOODS.get(score))), flush=True)
+
     def check_proposal(self, proposal: Proposal) -> Union[Proposal, None]:
         """
         Verify how many whites and reds correspond to the proposed sequence
@@ -119,7 +127,7 @@ class Problem:
                 answer,
                 self.__time_passed()
             )
-
+            self._generate_response(answer)
             return proposal
         return None
 
@@ -189,7 +197,10 @@ class Problem:
         """
         history = "{}\n".format(self.history)
         if self.__solved:
-            history += "The game was won!!!"
+            history += "The game was won!!!\n"
         else:
-            history += "The game was lost."
+            history = 'Negotiation Round _ -> Captor: {}\n' \
+                      '*BANG*\n' \
+                      '{}' \
+                      'The game was lost.\n'.format(choice(Responses.FAILURE), history)
         print(history)
