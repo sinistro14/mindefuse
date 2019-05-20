@@ -85,7 +85,7 @@ class Problem:
         self.__start_time = self.__start_time or now
         return now - self.__start_time
 
-    def current_round(self) -> int:
+    def __current_round(self) -> int:
         """
         Provides the current round value
         :return: current round
@@ -113,7 +113,7 @@ class Problem:
                 self.__finished = True
 
             self.history.add_entry(                         # update history
-                self.current_round(),
+                self.__current_round(),
                 self.__secret.sequence,
                 proposal.sequence,
                 answer,
@@ -122,6 +122,13 @@ class Problem:
 
             return proposal
         return None
+
+    def secret_type(self) -> SecretTypes:
+        """
+        Provides the type fo secret
+        :return: type of secret
+        """
+        return self.__secret.type
 
     def secret_size(self) -> int:
         """
@@ -162,6 +169,13 @@ class Problem:
         """
         return self.__finished
 
+    def time_to_solve(self):
+        """
+        Provides the time, in seconds, take to solve the problem
+        :return: time taken to solve the problem
+        """
+        return self.history.duration()
+
     def print_secret(self):
         """
         Prints the generated secret sequence
@@ -173,7 +187,7 @@ class Problem:
         """
         Prints the history of the problem
         """
-        history = str(self.history) + '\n'
+        history = "{}\n".format(self.history)
         if self.__solved:
             history += "The game was won!!!"
         else:

@@ -20,7 +20,9 @@ class Mindefuse:
     """Holds all the available strategies"""
     __strategies = Dict[StrategyTypes, Strategy]
 
-    def __init__(self):
+    def __init__(self, verbose=True):
+
+        self.__verbose = verbose
 
         self.__strategies = {}
 
@@ -81,5 +83,6 @@ class Mindefuse:
         """
         problem = self.generate_problem(rounds=rounds, secret_type=secret_type, secret_size=secret_size, secret=secret)
         problem = self.get_strategy(algorithm).solve_problem(problem)
-        problem.print_history()
+        if self.__verbose:
+            problem.print_history()
         return problem

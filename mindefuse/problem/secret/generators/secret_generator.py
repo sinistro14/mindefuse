@@ -70,6 +70,7 @@ class SecretGenerator(ABC):
         return Secret(
             sequence=sequence,
             elements=len(sequence),
+            secret_type=self._type,
             types=len(self._possible_elements),
             possible_elements=self._possible_elements
         )
