@@ -95,7 +95,13 @@ class Problem(Responses):
         """
         return self.__rounds - self.elapsed_rounds
 
-    def _generate_response(self, answer):
+    def __generate_response(self, answer):
+        """
+        Evaluates captor's mood after a guess and prints a response. This mood is given by (2R + W) / 2S, where R and W
+        are the number red and white pegs, respectively, and S is the secret size. The actual response is chosen
+        randomly based on the mood.
+        :param answer: current round's answer
+        """
         score = floor(4 * (2 * answer[1] + answer[0]) / (2 * self.secret_size()))
         print('Negotiation round {} -> Captor: {}'.format(self.__current_round(),
                                                           choice(Responses.MOODS.get(score))), flush=True)
@@ -127,7 +133,7 @@ class Problem(Responses):
                 answer,
                 self.__time_passed()
             )
-            self._generate_response(answer)
+            self.__generate_response(answer)
             return proposal
         return None
 
