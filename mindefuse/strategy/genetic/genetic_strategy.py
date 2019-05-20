@@ -142,8 +142,7 @@ class GeneticStrategy(Strategy):
         :param problem: Problem used to compare sequences.
         :return: Fitness score.
         """
-        sum_whites, sum_reds = 0, 0
-        pos = problem.secret_size()
+        sum_whites = sum_reds = 0
         for i in range(1, len(guesses) + 1):
             guess = guesses[i-1]
             guess_whites, guess_reds = guess.whites, guess.reds
@@ -242,5 +241,4 @@ class GeneticStrategy(Strategy):
 
             problem.check_proposal(proposal)
 
-        problem.print_history()
         return problem

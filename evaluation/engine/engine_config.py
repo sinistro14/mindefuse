@@ -13,7 +13,7 @@ class EngineConfig:
     EDIT_MODE = "a+"
 
     """Arguments used for tests"""
-    TEST_FIELDS = ["algorithm", "rounds", "secret"]
+    TEST_FIELDS = ["rounds", "secret", "algorithm"]
 
     """Identifiers of the CSV file attributes"""
     FIELD_NAMES = [

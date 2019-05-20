@@ -28,19 +28,15 @@ class Engine:
             for test in tests:
                 args = Args(*test)
 
-                Engine.feedback(args)
+                for algorithm in args.algorithm:
+                    for secret in args.secret:
 
-                result = Mindefuse(verbose=False).solve_problem(
-                    rounds=args.rounds,
-                    algorithm=args.algorithm,
-                    secret=args.secret,
-                )
-                writer.writerow(ProblemConverter.convert(args.secret, args.algorithm, result))
+                        print("Running - Strategy: {}, Rounds: {}, Secret: {}"
+                              .format(algorithm, args.rounds, secret))
 
-    @staticmethod
-    def feedback(args):
-        """
-        Provide information about the currently active test
-        :param args: named tuple of arguments used in the test
-        """
-        print("Running - Strategy: {}, Rounds: {}, Secret: {}".format(args.algorithm, args.rounds, args.secret))
+                        result = Mindefuse(verbose=False).solve_problem(
+                            rounds=args.rounds,
+                            algorithm=algorithm,
+                            secret=secret,
+                        )
+                        writer.writerow(ProblemConverter.convert(secret, algorithm, result))
