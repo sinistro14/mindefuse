@@ -13,7 +13,7 @@ from .history import History
 from .responses import Responses
 
 
-class Problem(Responses):
+class Problem:
     """
     Representation of a Mastermind style problem
     """
