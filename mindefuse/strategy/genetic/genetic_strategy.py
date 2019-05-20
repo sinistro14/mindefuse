@@ -46,7 +46,7 @@ class GeneticStrategy(Strategy):
         :param size: The size (length) of guess.
         :return: A tuple with both indexes, in ascending order.
         """
-        idxs = rnd.sample(range(0, size-1), 2)
+        idxs = rnd.sample(range(0, size), 2)
         return min(idxs), max(idxs)
 
     @staticmethod
