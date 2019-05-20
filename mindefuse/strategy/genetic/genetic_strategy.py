@@ -142,10 +142,9 @@ class GeneticStrategy(Strategy):
         :param problem: Problem used to compare sequences.
         :return: Fitness score.
         """
-        sum_whites, sum_reds = 0, 0
-        pos = problem.secret_size()
+        sum_whites = sum_reds = 0
         for i in range(1, len(guesses) + 1):
-            guess = guesses[i-1]
+            guess = guesses[i - 1]
             guess_whites, guess_reds = guess.whites, guess.reds
 
             play_whites, play_reds = problem.compare_sequences(guess.sequence, "".join(trial))
@@ -178,12 +177,12 @@ class GeneticStrategy(Strategy):
 
         while len(eligible) <= max_population and h <= max_generations:
 
-            """Genetic Evolution"""
+            # Genetic Evolution
             offspring = []
 
             for i in range(len(population) - 1):
 
-                children = self._crossover(population[i], population[i+1])
+                children = self._crossover(population[i], population[i + 1])
 
                 for child in children:
                     if rnd.random() <= Config.MUTATION_PROB:
@@ -200,7 +199,7 @@ class GeneticStrategy(Strategy):
 
                     offspring.append(child)
 
-            """Eligibility Test"""
+            # Eligibility Test
             for child in offspring:
                 if self._fitness_score(child, guesses, problem) == 0 and "".join(child) not in eligible:
                     eligible.append("".join(child))
@@ -214,9 +213,9 @@ class GeneticStrategy(Strategy):
         :param problem: problem to solve
         :return: problem after running the algorithm
         """
-        current_guess = self._initial_guess(problem)
-
-        proposal = self.create_proposal(current_guess)
+        proposal = self.create_proposal(
+            self._initial_guess(problem)
+        )
 
         problem.check_proposal(proposal)
 
@@ -226,14 +225,18 @@ class GeneticStrategy(Strategy):
 
             eligibles = self._genetic_evolution(Config.MAX_POPULATION, Config.MAX_GENERATIONS, problem, guesses)
 
-            """Scales genetic evolution for higher complexities"""
+            # Scales genetic evolution for higher complexities
             scale = 2
             while not eligibles:
-                eligibles = self._genetic_evolution(Config.MAX_POPULATION * scale, Config.MAX_GENERATIONS * scale,
-                                                    problem, guesses)
+                eligibles = self._genetic_evolution(
+                    Config.MAX_POPULATION * scale,
+                    Config.MAX_GENERATIONS * scale,
+                    problem,
+                    guesses
+                )
                 scale += 1
 
-            """Randomly select an eligible guess"""
+            # Randomly select an eligible guess
             guess = eligibles[rnd.randint(0, len(eligibles) - 1)]
 
             proposal = self.create_proposal(guess)
@@ -242,5 +245,4 @@ class GeneticStrategy(Strategy):
 
             problem.check_proposal(proposal)
 
-        problem.print_history()
         return problem
