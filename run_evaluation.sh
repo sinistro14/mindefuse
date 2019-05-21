@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-python3 -m evaluation
+python -m pipenv run python -m evaluation

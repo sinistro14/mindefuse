@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-pipenv run python -m mindefuse
+python -m pipenv run python -m mindefuse

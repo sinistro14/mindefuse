@@ -1,5 +1,6 @@
 #! usr/bin/env python3.7
 
+import os
 import csv
 from typing import List, Tuple
 from collections import namedtuple
@@ -19,7 +20,7 @@ class Engine:
         """
 
         Args = namedtuple('Args', Config.TEST_FIELDS)
-
+        os.makedirs(os.path.dirname(Config.OUTPUT_FILE), exist_ok=True)
         with open(Config.OUTPUT_FILE, mode=Config.EDIT_MODE) as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=Config.FIELD_NAMES)
 

@@ -5,6 +5,8 @@ from setuptools import setup, find_packages
 setup(
     name='mindefuse',
 
+    python_version='>=3.6',
+
     version='0.9.0',
 
     description='Hostage situation negotiator simulation',
