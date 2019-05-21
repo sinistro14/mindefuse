@@ -35,6 +35,13 @@ class History:
             return self.entries[-1].time
         return 0
 
+    def rounds(self):
+        """
+        Provides the number of rounds that passed
+        :return: rounds that passed
+        """
+        return len(self.entries)
+
     def __str__(self):
         final = "{}History{}\n".format(35 * "-", 35 * "-")
         final += "\n".join(str(entry) for entry in self.entries)

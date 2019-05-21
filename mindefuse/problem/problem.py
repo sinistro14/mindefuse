@@ -183,6 +183,13 @@ class Problem:
         """
         return self.__finished
 
+    def turns_to_solve(self):
+        """
+        Provides the number of rounds that were required to solve the problem
+        :return: number of rounds needed to solve the problem
+        """
+        return self.history.rounds()
+
     def time_to_solve(self):
         """
         Provides the time, in seconds, take to solve the problem

@@ -23,6 +23,7 @@ class ProblemConverter:
             "secret": secret,
             "algorithm": strategy,
             "size": problem.secret_size(),
+            "rounds": problem.turns_to_solve(),
             "solved": problem.solved(),
             "type": problem.secret_type(),
             "time": problem.time_to_solve(),

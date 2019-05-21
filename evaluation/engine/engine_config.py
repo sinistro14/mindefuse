@@ -19,8 +19,9 @@ class EngineConfig:
     FIELD_NAMES = [
         "algorithm",
         "secret",
+        "type",
         "size",
         "solved",
-        "type",
+        "rounds",
         "time",
     ]
