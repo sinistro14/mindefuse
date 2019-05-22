@@ -27,7 +27,7 @@ class SwaszekStrategy(Strategy):
         ]
 
         best_problem = problem
-        las_proposal = None
+        last_proposal = None
 
         while True:
             best_proposal = None
@@ -37,7 +37,7 @@ class SwaszekStrategy(Strategy):
             for agent in agent_list:
 
                 if best_problem and best_problem.finished():
-                    best_problem.generate_response((las_proposal.whites,las_proposal.reds))
+                    best_problem.generate_response((last_proposal.whites,last_proposal.reds))
                     return best_problem
 
                 agent_problem = copy.deepcopy(agent_problem_to_copy)
@@ -50,7 +50,7 @@ class SwaszekStrategy(Strategy):
                     return best_problem
 
                 if proposal and (not best_proposal or self.better_proposal(proposal, best_proposal)):
-                    las_proposal = proposal
+                    last_proposal = proposal
                     best_proposal = proposal
                     best_problem = agent_problem
 
