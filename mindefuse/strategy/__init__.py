@@ -6,3 +6,4 @@ from .null import NullStrategy
 from .knuth import KnuthStrategy
 from .genetic import GeneticStrategy
 from .swaszek import SwaszekStrategy
+from .hybrid import HybridStrategy
