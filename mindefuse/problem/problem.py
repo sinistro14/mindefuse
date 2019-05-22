@@ -95,7 +95,7 @@ class Problem:
         """
         return self.__rounds - self.elapsed_rounds
 
-    def __generate_response(self, answer):
+    def generate_response(self, answer):
         """
         Evaluates captor's mood after a guess and prints a response. This mood is given by (2R + W) / 2S, where R and W
         are the number red and white pegs, respectively, and S is the secret size. The actual response is chosen
@@ -106,7 +106,7 @@ class Problem:
         print('Negotiation round {} -> Captor: {}'.format(self.__current_round(),
                                                           choice(Responses.MOODS.get(score))), flush=True)
 
-    def check_proposal(self, proposal: Proposal) -> Union[Proposal, None]:
+    def check_proposal(self, proposal: Proposal, respond = True) -> Union[Proposal, None]:
         """
         Verify how many whites and reds correspond to the proposed sequence
         Represents a played turn, therefore, it elapses a round
@@ -133,7 +133,8 @@ class Problem:
                 answer,
                 self.__time_passed()
             )
-            self.__generate_response(answer)
+            if respond:
+                self.generate_response(answer)
             return proposal
         return None
 

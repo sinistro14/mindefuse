@@ -27,26 +27,35 @@ class SwaszekStrategy(Strategy):
         ]
 
         best_problem = problem
+        las_proposal = None
 
         while True:
             best_proposal = None
 
+            agent_problem_to_copy = copy.deepcopy(best_problem)
+
             for agent in agent_list:
 
                 if best_problem and best_problem.finished():
+                    best_problem.generate_response((las_proposal.whites,las_proposal.reds))
                     return best_problem
 
-                agent_problem = copy.deepcopy(best_problem)
+                agent_problem = copy.deepcopy(agent_problem_to_copy)
                 agent_choice = ''.join(agent.agent_choice(peg_possibilities_list))
-                proposal = agent_problem.check_proposal(self.create_proposal(agent_choice))
+                proposal = agent_problem.check_proposal(self.create_proposal(agent_choice), respond=False)
 
                 if best_problem.finished() or proposal.reds == 4:
                     best_problem = agent_problem
+                    best_problem.generate_response((proposal.whites,proposal.reds))
                     return best_problem
 
                 if proposal and (not best_proposal or self.better_proposal(proposal, best_proposal)):
+                    las_proposal = proposal
                     best_proposal = proposal
                     best_problem = agent_problem
+
+            if not best_problem.finished():
+                best_problem.generate_response((best_proposal.whites,best_proposal.reds))
 
             peg_possibilities_list = self.prune_guesses(
                 peg_possibilities_list,
@@ -71,7 +80,6 @@ class SwaszekStrategy(Strategy):
             possib = ''.join(possibility)
             if (possib != current_guess) and (Problem.compare_sequences(possib, current_guess) == (white, red)):
                 new_possibilities.append(possibility)
-
         return new_possibilities
 
     @staticmethod
