@@ -34,7 +34,7 @@ class CommandParser:
             self.__set_opt(Config.ALGORITHM),
             action="store",
             default=StrategyTypes.KNUTH,
-            choices=[StrategyTypes.KNUTH, StrategyTypes.GENETIC, StrategyTypes.SWASZEK],
+            choices=[StrategyTypes.KNUTH, StrategyTypes.GENETIC, StrategyTypes.SWASZEK, StrategyTypes.HYBRID],
             help="only useful when solving a problem"
         )
 

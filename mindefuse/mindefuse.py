@@ -3,7 +3,7 @@
 from typing import Dict
 
 from .problem import ProblemBuilder, Problem
-from .strategy import NullStrategy, KnuthStrategy, GeneticStrategy, SwaszekStrategy
+from .strategy import NullStrategy, KnuthStrategy, GeneticStrategy, SwaszekStrategy, HybridStrategy
 from .strategy import Strategy, StrategyTypes
 
 
@@ -32,7 +32,8 @@ class Mindefuse:
         for strategy in (
             KnuthStrategy(),
             GeneticStrategy(),
-            SwaszekStrategy()
+            SwaszekStrategy(),
+            HybridStrategy(),
         ):
             strategy.register(self)
 

@@ -9,3 +9,4 @@ class StrategyTypes:
     KNUTH = "knuth"
     GENETIC = "genetic"
     SWASZEK = "swaszek"
+    HYBRID = "hybrid"
