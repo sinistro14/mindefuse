@@ -15,10 +15,8 @@ python:
 
 # command to install dependencies
 install:
-  - python -m pip install pipenv
-  - python -m pipenv --python 3
-  - python -m pipenv install --dev
+  - python -m pip install -r requirements.txt
 
 # command to run tests, run all tests only in nightly build
 script:
-  - if [[ "$TRAVIS_EVENT_TYPE" = "cron" ]]; then python -m pipenv run pytest -m "not custom"; else python -m pipenv run pytest -m lite; fi
+  - if [[ "$TRAVIS_EVENT_TYPE" = "cron" ]]; then python3 -m pytest -m "not custom"; else python3 -m pytest -m lite; fi
