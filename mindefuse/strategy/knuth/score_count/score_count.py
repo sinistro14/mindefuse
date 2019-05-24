@@ -12,7 +12,7 @@ class ScoreCount(ABC):
     """
 
     @staticmethod
-    def _count_score(combination, solutions):
+    def count_score(combination, solutions):
         """
         Provides the score of a combination.
         The score of a combination is the maximum size of the solution space, in the worst case,
@@ -31,4 +31,10 @@ class ScoreCount(ABC):
     @staticmethod
     @abstractmethod
     def run(combinations, solutions):
+        """
+        Calculate the score of several combinations
+        :param combinations: combinations available for the problem
+        :param solutions: existing solutions
+        :return: scores of the combinations
+        """
         pass

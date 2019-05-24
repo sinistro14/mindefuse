@@ -17,5 +17,5 @@ class SimpleScore(ScoreCount):
 
         return {
             combination: score for combination, score in
-            [ScoreCount._count_score(combination, solutions) for combination in combinations]
+            [ScoreCount.count_score(combination, solutions) for combination in combinations]
         }
