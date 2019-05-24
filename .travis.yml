@@ -24,4 +24,4 @@ install:
 
 # command to run tests, run all tests only in nightly build
 script:
-  - if [[ "$TRAVIS_EVENT_TYPE" = "cron" ]]; then make test_nightly; else test_lite; fi
+  - if [[ "$TRAVIS_EVENT_TYPE" = "cron" ]]; then make test_nightly; else make test_lite; fi
