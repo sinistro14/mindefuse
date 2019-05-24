@@ -11,5 +11,3 @@ pytest-repeat = "==0.8.0"
 
 [packages]
 
-[requires]
-python_version = "3.6"
