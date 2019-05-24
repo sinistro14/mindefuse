@@ -10,11 +10,11 @@ help:
 	@echo "    exit             leave virtual environment"
 
 setup:
-	python -m pip install --user pipenv
+	python -m pip install pipenv
 	python -m pipenv install
 
 setup_dev:
-	python -m pip install --user pipenv
+	python -m pip install pipenv
 	python -m pipenv install --dev
 
 activate:
