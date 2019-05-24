@@ -20,7 +20,7 @@ env:
 
 # command to install dependencies
 install:
-  - make setup_test
+  - make setup_dev
 
 # command to run tests, run all tests only in nightly build
 script:
