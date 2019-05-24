@@ -13,10 +13,15 @@ python:
   - 3.6
   - 3.7
 
+env:
+  global:
+    - PIPENV_VENV_IN_PROJECT=1
+    - PIPENV_IGNORE_VIRTUALENVS=1
+
 # command to install dependencies
 install:
-  - python -m pip install -r requirements.txt
+  - make setup_dev
 
 # command to run tests, run all tests only in nightly build
 script:
-  - if [[ "$TRAVIS_EVENT_TYPE" = "cron" ]]; then python3 -m pytest -m "not custom"; else python3 -m pytest -m lite; fi
+  - if [[ "$TRAVIS_EVENT_TYPE" = "cron" ]]; then make test_nightly; else make test_lite; fi
