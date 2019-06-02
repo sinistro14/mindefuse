@@ -1,5 +1,7 @@
 include Makefile
 include README.md
 include LICENSE
-graft tests
 exclude .travis.yml
+include make.py
+include setup.py
+include Pipfile

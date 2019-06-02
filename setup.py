@@ -5,13 +5,25 @@ from setuptools import setup, find_packages
 setup(
     name='mindefuse',
 
-    python_version='>=3.6',
+    python_requires='>=3.6',
 
-    version='0.9.0',
+    version='1.0.0',
 
     description='Hostage situation negotiator simulation',
 
+    long_description=open('README.md', 'r').read(),
+
+    long_description_content_type="text/markdown",
+
     url='https://github.com/sinistro14/mindefuse',
+
+    download_url='https://github.com/schollz/howmanypeoplearearound/archive/v0.1.6.tar.gz',
+
+    author="sinistro14",
+
+    author_email="tiago14_ribeiro@ħotmail.com",
+
+    license="MIT",
 
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -19,6 +31,8 @@ setup(
         'Intended Audience :: Education',
                              
         'License :: OSI Approved :: MIT License',
+
+        'Programming Language :: Python :: 3.6',
 
         'Programming Language :: Python :: 3.7',
 
@@ -35,6 +49,8 @@ setup(
 
     keywords='python hostage negotiation',
 
+    scripts=['make.py'],
+
     packages=find_packages(exclude=['tests']),
 
     install_requires=[
@@ -47,6 +63,11 @@ setup(
         'pytest-repeat',
     ],
 
+    extras_require={
+        'dev': [
+            'wheel',
+        ]
+    },
 
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
@@ -56,8 +77,4 @@ setup(
             'mindefuse = mindefuse.__main__:main',
         ],
     },
-
-    project_urls={
-        'Source': 'https://github.com/sinistro14/mindefuse'
-    }
 )

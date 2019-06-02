@@ -1,35 +1,43 @@
-#!/usr/bin/make -f
+PIP=python -m pip
+PYR=python -m pipenv
+PRINT=python -c "import sys; print(str(sys.argv[1]))"
 
 help:
-	@echo "Usage:"
-	@echo "    make help        show this message"
-	@echo "    make setup       create virtual environment and install dependencies"
-	@echo "    make setup_test  create virtual environment and install dependencies for development"
-	@echo "    make activate    enter virtual environment"
-	@echo "    make test_lite   run the test suite"
-	@echo "    exit             leave virtual environment"
+	$(PRINT) "Usage:"
+	$(PRINT) "    help          show this message"
+	$(PRINT) "    setup         create virtual environment and install dependencies"
+	$(PRINT) "    setup_dev     create virtual environment and install development dependencies"
+	$(PRINT) "    run           run mindefuse application"
+	$(PRINT) "    dist          package application for distribution"
+    $(PRINT) "    test_lite     run the lite test suite"
+	$(PRINT) "    test_nightly  run a longer test suite"
+	$(PRINT) "    evaluation    run mindefuse evaluation tests"
+	$(PRINT) "    clean         remove the project dependencies and environment"
 
 setup:
-	python -m pip install pipenv
-	python -m pipenv install
+	$(PIP) install pipenv
+	$(PYR) install --three
 
 setup_dev:
-	python -m pip install pipenv
-	python -m pipenv install --dev
+	$(PIP) install pipenv
+	$(PYR) install --three --dev
 
-activate:
-	python -m pipenv shell
-
-test_lite:
-	python -m pipenv run python -m pytest -m lite
-
-test_nightly:
-	python -m pipenv run python -m pytest -m "not custom"
-
-evaluation:
-	python -m pipenv run python -m evaluation
+dist:
+	$(PYR) run python setup.py bdist_wheel
 
 run:
-	python -m pipenv run python -m mindefuse
+	$(PYR) run python -m mindefuse
 
-.PHONY: help activate test test_lite test_nightly
+clean:
+	$(PYR) --rm
+
+test_lite:
+	$(PYR) run python -m pytest -m lite
+
+test_nightly:
+	$(PYR) run python -m pytest -m "not custom"
+
+evaluation:
+	$(PYR) run python -m evaluation
+
+.PHONY: run setup setup_dev dist clean test_lite test_nightly evaluation

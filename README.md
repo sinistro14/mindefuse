@@ -9,18 +9,18 @@ Python version 3.6 or above is assumed to be installed, as well as pip package m
 
 ## Installation
 ```bash
-./setup_mindefuse.sh
+python make.py setup
 ``` 
 
 ## How to run
 
 ```bash
-./run_mindefuse.sh
+python make.py run
 ```
 
 ## Commands
 
-Further information is provided while running the application by using _\<command\> -h_ instruction.
+Further information can be provided while running the application by using _\<command\> -h_ instruction.
 
 * help - list the available commands
 * exit | quit - exit the application
