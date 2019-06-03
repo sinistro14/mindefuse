@@ -4,7 +4,7 @@
 Hostage situation negotiator simulation
 
 ## Prerequisites
-The application is compatible with Linux based systems.
+The application is compatible with Windows and Linux based systems.
 Python version 3.6 or above is assumed to be installed, as well as pip package manager utility and setuptools module.
 
 ## Installation
@@ -13,7 +13,6 @@ python make.py setup
 ``` 
 
 ## How to run
-
 ```bash
 python make.py run
 ```

@@ -7,7 +7,7 @@ setup(
 
     python_requires='>=3.6',
 
-    version='1.0.0',
+    version='1.0.1',
 
     description='Hostage situation negotiator simulation',
 
@@ -37,6 +37,8 @@ setup(
         'Programming Language :: Python :: 3.7',
 
         'Operating System :: POSIX :: Linux',
+
+        'Operating System :: Microsoft :: Windows',
 
         'Natural Language :: English',
 
