@@ -26,7 +26,7 @@ matrix:
       python: "3.6"
       before_install:
         - choco install python3
-        - export PATH="/c/Python37:/c/Python37/Scripts:$PATH"
+        - export PATH="/c/Python36:/c/Python36/Scripts:$PATH"
         - python -m pip install --upgrade pip wheel
     - os: windows
       language: sh
