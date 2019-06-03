@@ -18,10 +18,20 @@ env:
     - PIPENV_VENV_IN_PROJECT=1
     - PIPENV_IGNORE_VIRTUALENVS=1
 
+matrix:
+  include:
+    - os: windows
+      language: sh
+      python: "3.7"
+      before_install:
+        - choco install python3
+        - export PATH="/c/Python37:/c/Python37/Scripts:$PATH"
+        - python -m pip install --upgrade pip wheel
+
 # command to install dependencies
 install:
-  - make setup_dev
+  - python make.py setup_dev
 
 # command to run tests, run all tests only in nightly build
 script:
-  - if [[ "$TRAVIS_EVENT_TYPE" = "cron" ]]; then make test_nightly; else make test_lite; fi
+  - if [[ "$TRAVIS_EVENT_TYPE" = "cron" ]]; then python make.py test_nightly; else python make.py test_lite; fi
