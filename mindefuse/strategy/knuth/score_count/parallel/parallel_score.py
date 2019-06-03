@@ -51,7 +51,7 @@ class ParallelScore(ScoreCount):
 
         results = SimpleQueue()
 
-        solutions = list(solutions)
+        solutions = list(solutions)  # required to be able to run on Windows
 
         for combs in chunks(combinations, Config.POOL_SIZE):
             job = Process(
