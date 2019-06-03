@@ -35,7 +35,7 @@ class KnuthStrategy(Strategy):
     _type = StrategyTypes.KNUTH
 
     """score counter strategy"""
-    __score_counter = SimpleScore
+    _score_counter = SimpleScore
 
     @staticmethod
     def _initial_guess(problem):
@@ -113,7 +113,7 @@ class KnuthStrategy(Strategy):
         :param solutions: solution space
         :return: the minimum max scored guesses
         """
-        scores = self.__score_counter.run(combinations, solutions)
+        scores = self._score_counter.run(combinations, solutions)
 
         # minimum max score
         min_score = min(scores.values())
@@ -132,9 +132,9 @@ class KnuthStrategy(Strategy):
 
         # for a secret size inferior to 2, multiprocessing is slower
         if secret_size > 2:
-            self.__score_counter = ParallelScore
+            self._score_counter = ParallelScore
         else:
-            self.__score_counter = SimpleScore
+            self._score_counter = SimpleScore
 
         current_guess = self._initial_guess(problem)
 
