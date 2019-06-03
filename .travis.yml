@@ -23,6 +23,13 @@ matrix:
   include:
     - os: windows
       language: sh
+      python: "3.6"
+      before_install:
+        - choco install python3
+        - export PATH="/c/Python37:/c/Python37/Scripts:$PATH"
+        - python -m pip install --upgrade pip wheel
+    - os: windows
+      language: sh
       python: "3.7"
       before_install:
         - choco install python3
@@ -31,8 +38,8 @@ matrix:
 
 # command to install dependencies
 install:
-  - python make.py setup_dev
+  - make setup_dev
 
 # command to run tests, run all tests only in nightly build
 script:
-  - if [[ "$TRAVIS_EVENT_TYPE" = "cron" ]]; then python make.py test_nightly; else python make.py test_lite; fi
+  - if [[ "$TRAVIS_EVENT_TYPE" = "cron" ]]; then make test_nightly; else make test_lite; fi
