@@ -12,7 +12,7 @@ def install_and_import(package_id, package):
     """
     try:
         importlib.import_module(package)
-    except ImportError:
+    except:
         pipmain(['install', '--user', '-q', package_id])
     finally:
         globals()[package] = importlib.import_module(package)
