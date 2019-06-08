@@ -4,23 +4,22 @@
 Hostage situation negotiator simulation
 
 ## Prerequisites
-The application is compatible with Linux based systems.
+The application is compatible with Windows and Linux based systems.
 Python version 3.6 or above is assumed to be installed, as well as pip package manager utility and setuptools module.
 
 ## Installation
 ```bash
-./setup_mindefuse.sh
+python make.py setup
 ``` 
 
 ## How to run
-
 ```bash
-./run_mindefuse.sh
+python make.py run
 ```
 
 ## Commands
 
-Further information is provided while running the application by using _\<command\> -h_ instruction.
+Further information can be provided while running the application by using _\<command\> -h_ instruction.
 
 * help - list the available commands
 * exit | quit - exit the application
