@@ -17,8 +17,6 @@ setup(
 
     url='https://github.com/sinistro14/mindefuse',
 
-    download_url='https://github.com/schollz/howmanypeoplearearound/archive/v0.1.6.tar.gz',
-
     author="sinistro14",
 
     author_email="tiago14_ribeiro@ħotmail.com",
